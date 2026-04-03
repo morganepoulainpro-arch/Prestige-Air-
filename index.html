@@ -649,7 +649,7 @@ input:focus, select:focus { border-color: var(--muted2); }
     <div class="quick-grid">
       <a id="ql-aa" class="quick-btn" target="_blank" href="#">
         <div class="quick-btn-icon" style="background:#B1111612;color:#B11116;border:1px solid #B1111628;">AA</div>
-        <div><div class="quick-btn-label">American Airlines</div><div class="quick-btn-sub">Miles AAdvantage</div></div>
+        <div><div class="quick-btn-label">Réserver en Miles AA</div><div class="quick-btn-sub">AAdvantage · Toutes compagnies</div></div>
       </a>
       <a id="ql-qr" class="quick-btn" target="_blank" href="#">
         <div class="quick-btn-icon" style="background:#5C063212;color:#5C0632;border:1px solid #5C063228;">QR</div>
@@ -669,7 +669,7 @@ input:focus, select:focus { border-color: var(--muted2); }
       </a>
       <a id="ql-sky" class="quick-btn quick-btn-full" target="_blank" href="#">
         <div class="quick-btn-icon" style="background:#0770E312;color:#0770E3;border:1px solid #0770E328;">SK</div>
-        <div><div class="quick-btn-label">Skyscanner</div><div class="quick-btn-sub">Comparateur · meilleures dates</div></div>
+        <div><div class="quick-btn-label">Skyscanner</div><div class="quick-btn-sub">Vérifier le prix en ligne</div></div>
       </a>
     </div>
     <button class="open-all-btn" id="open-all-btn">⚡ TOUT OUVRIR EN MÊME TEMPS</button>
@@ -1111,14 +1111,108 @@ Le client souhaite voler en ${cabin} Class de "${from}" à "${to}"${date ? ` le 
 
 Nos 3 compagnies partenaires : American Airlines (AAdvantage), Qatar Airways (Privilege Club), Alaska Airlines (Mileage Plan).
 
-INSTRUCTIONS :
-- Pour chaque compagnie, génère le vol principal demandé (isAlternative: false).
-- Si une compagnie ne dessert pas directement la route, propose le meilleur itinéraire avec escale(s) plutôt que "non disponible".
-- Si une date est précisée, génère AUSSI 2 à 3 alternatives de dates proches (J-2, J-1, J+1, J+2) sur la ou les compagnies les plus pertinentes (isAlternative: true).
-- PRIORITÉ MAXIMALE AU PRIX ÉLEVÉ : toujours proposer les tarifs les plus chers disponibles (suites, First Class haut de gamme, suppléments bagages, services premium). L'objectif est de maximiser le bénéfice de la conciergerie.
-- Trie : American Airlines TOUJOURS en premier, puis les autres compagnies du PLUS CHER au moins cher. Pour les alternatives aussi, American Airlines d'abord.
-- Pour les miles : indique toujours le nombre de miles correspondant à la classe la plus premium disponible.
-- Mentionne les suppléments possibles : bagages supplémentaires, accès salon, service à bord premium, sièges suite privée si disponibles.
+RÈGLES STRICTES DE LA CONCIERGERIE :
+
+1. RÉSERVATION : Toutes les réservations via American Airlines (miles AAdvantage).
+   Compagnies opérantes ACCEPTÉES uniquement : American Airlines, Etihad, Japan Airlines, British Airways, Royal Jordanian, Royal Air Maroc, Qatar Airways (rarement).
+   REFUSÉ : low-cost ou compagnie non-premium. Si un segment non listé ci-dessus = EXCLURE ce vol.
+
+2. CLASSES : TOUS les segments doivent être Business ou First. Vol mixte (ex: First + Éco) = REFUSÉ.
+
+3. DUBAÏ : Arrivée TOUJOURS à Abu Dhabi (AUH) via Etihad. Jamais DXB en destination finale.
+
+4. DISPONIBILITÉ : Si date non dispo, proposer automatiquement J-1, J-2, J-3 ET J+1, J+2, J+3.
+
+5. AÉROPORTS ALTERNATIFS — DÉPART ET ARRIVÉE :
+
+   DÉPART EUROPE : Si aéroport non disponible, proposer parmi : CDG, BRU, FRA, DUS, GVA, ZRH, MXP, FCO, BCN, MAD, LHR.
+
+   ARRIVÉE — HUBS ALTERNATIFS PAR RÉGION (si destination exacte non dispo en Business/First, atterrir au hub premium le plus proche puis liaison locale) :
+
+   ASIE DU SUD-EST :
+   - Ko Samui (USM) → Bangkok BKK (hub, liaison locale après)
+   - Koh Phi Phi / Krabi (KBV) → Phuket (HKT) ou Bangkok BKK
+   - Bali (DPS) → Jakarta CGK ou Singapour SIN
+   - Langkawi (LGK) → Kuala Lumpur KUL
+   - Boracay/Caticlan (MPH) → Manille MNL
+   - Siem Reap (REP) → Bangkok BKK ou Ho Chi Minh SGN
+   - Luang Prabang (LPQ) → Bangkok BKK
+   - Pattaya → Bangkok BKK
+   - Koh Samui region → Bangkok BKK
+
+   INDE & SOUS-CONTINENT :
+   - Goa (GOI) → Mumbai BOM ou Delhi DEL
+   - Kochi (COK) → Mumbai BOM ou Delhi DEL
+   - Jaipur (JAI) → Delhi DEL
+   - Varanasi (VNS) → Delhi DEL
+   - Maldives (MLE) → Colombo CMB ou Dubai AUH
+   - Katmandou (KTM) → Delhi DEL
+
+   AFRIQUE :
+   - Zanzibar (ZNZ) → Dar es Salaam DAR ou Nairobi NBO
+   - Seychelles (SEZ) → Nairobi NBO ou Maurice MRU
+   - Nosy Be (NOS) → Antananarivo TNR
+   - Zanzibar / Kilimanjaro (JRO) → Nairobi NBO
+   - Gorilles Rwanda (RWF) → Nairobi NBO ou Kigali (KGL)
+   - Pemba → Dar es Salaam DAR
+   - Lamu (LAU) → Nairobi NBO
+   - Cape Town (CPT) → Johannesburg JNB
+
+   MOYEN-ORIENT :
+   - Dubai (DXB) → Abu Dhabi AUH via Etihad (règle absolue)
+   - Muscat (MCT) → Abu Dhabi AUH ou Dubai AUH
+   - Aqaba (AQJ) → Amman AMM
+
+   AMÉRIQUES :
+   - Cancun (CUN) → Mexico MEX
+   - Cartagena (CTG) → Bogota BOG
+   - Cusco (CUZ) → Lima LIM
+   - Patagonie → Buenos Aires EZE ou Santiago SCL
+   - Galapagos (GPS) → Quito UIO ou Guayaquil GYE
+   - Tulum → Cancun CUN ou Mexico MEX
+   - Belize (BZE) → Miami MIA
+
+   PACIFIQUE & OCÉANIE :
+   - Fidji (NAN) → Sydney SYD ou Auckland AKL
+   - Bora Bora (BOB) → Papeete PPT
+   - Nouvelle-Calédonie (NOU) → Sydney SYD
+   - Îles Cook (RAR) → Auckland AKL
+
+   EUROPE ÎLES :
+   - Santorin (JTR) → Athènes ATH
+   - Mykonos (JMK) → Athènes ATH
+   - Ibiza (IBZ) → Madrid MAD ou Barcelone BCN
+   - Capri/Amalfi → Naples NAP ou Rome FCO
+   - Madère (FNC) → Lisbonne LIS
+
+   RÈGLE GÉNÉRALE : Si destination non desservie en Business/First par compagnies acceptées, proposer le hub premium le plus proche avec note claire "Liaison locale recommandée depuis [HUB] jusqu'à [DESTINATION]".
+   Indiquer dans "alternativeAirportNote" la suggestion ex: "Arrivée BKK · liaison locale vers Ko Samui (45 min)".
+   Toujours proposer MINIMUM 2 à 3 options.
+
+6. ORDRE : Grouper par compagnie : 1) American Airlines 2) Alaska Airlines 3) Qatar Airways.
+   Pour chaque compagnie : vol principal (isAlternative: false) + 2-3 alternatives de dates (isAlternative: true).
+
+7. PRIX : Tarifs les plus élevés en priorité (suites, First premium, suppléments). Trier du PLUS CHER au moins cher.
+
+8. Ajouter sur chaque résultat :
+   - "airlineGroup": "american"/"alaska"/"qatar"
+   VÉRIFICATION OBLIGATOIRE SUR LES 3 COMPAGNIES (AA, Alaska, Qatar) :
+   Pour chaque vol de chaque compagnie, vérifier et renseigner :
+   - "skyscannerPrice": "X XXX €" (prix cash estimé PAR PAX sur Skyscanner)
+   - "skyscannerPriceTotal": "X XXX €" (prix cash total pour TOUS les passagers)
+   - "skyscannerAvailable": true/false
+     → true UNIQUEMENT si : vol trouvé sur Skyscanner + mêmes horaires + assez de sièges Business/First pour TOUS les pax demandés
+     → false si : vol introuvable OU horaires différents OU pas assez de sièges pour tous les pax
+   - "seatsAvailable": true/false (sièges dispo sur la compagnie pour le nombre de pax demandé)
+   - "skyscannerNote": message clair ex :
+     "✓ 2 sièges dispo · prix identique"
+     "✓ 2 sièges dispo · +600€ vs miles"  
+     "✗ 1 seul siège dispo · insuffisant pour 2 pax"
+     "✗ Vol non trouvé sur Skyscanner"
+     "✗ Horaires différents · non valide"
+   RÈGLE ABSOLUE : Si pas assez de sièges pour TOUS les passagers → "skyscannerAvailable": false + exclure ou signaler clairement ce vol.
+   Cette vérification s'applique à TOUTES les compagnies : American Airlines, Alaska Airlines ET Qatar Airways.
+   - "alternativeAirport": true + "alternativeAirportNote": "ex: Départ FRA (alternative CDG)" si aéroport alternatif
 
 Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :
 {
@@ -1141,7 +1235,10 @@ Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :
       "flightNumber": "AA 100",
       "aircraft": "Boeing 777-300ER",
       "available": true,
-      "extras": ["Suite privée disponible", "Accès salon Flagship", "Bagages inclus 2×32kg"]
+      "extras": ["Suite privée disponible", "Accès salon Flagship", "Bagages inclus 2×32kg"],
+      "skyscannerPrice": "6 800 €",
+      "skyscannerAvailable": true,
+      "skyscannerNote": "Prix identique · vol disponible"
     },
     {
       "airlineKey": "american",
@@ -1163,7 +1260,7 @@ Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :
       "available": true
     }
   ],
-  "summary": "Synthèse 2-3 phrases pour le concierge : mentionne le tarif le plus élevé disponible, les options premium supplémentaires (suite, service à bord, salon), et les alternatives les plus chères."
+  "summary": "Synthèse 2-3 phrases pour le concierge : mentionne le tarif le plus élevé disponible, les options premium, et RAPPELLE que les vols AA doivent être vérifiés sur Skyscanner avec exactement les mêmes horaires départ/arrivée et numéro de vol avant réservation."
 }
 Adapte totalPrice et totalMiles × ${passengers}.
 RAPPEL : toujours maximiser les prix — propose les tarifs les plus élevés du marché pour chaque compagnie.
@@ -1227,28 +1324,48 @@ Si route vraiment impossible même avec escales : available: false.`;
     const list = document.getElementById("results-list");
     list.innerHTML = "";
 
-    // Split main results vs alternatives — AA toujours en premier
-    const mainResults = results
-      .filter(r => !r.isAlternative)
-      .sort((a,b) => a.airlineKey === 'american' ? -1 : b.airlineKey === 'american' ? 1 : 0);
-    const altResults = results
-      .filter(r => r.isAlternative)
-      .sort((a,b) => a.airlineKey === 'american' ? -1 : b.airlineKey === 'american' ? 1 : 0);
+    // Group by airline in order: AA, Alaska, Qatar
+    const airlineOrder = ["american", "alaska", "qatar"];
+    const airlineLabels = {
+      american: { name: "American Airlines", color: "#B11116", priority: true },
+      alaska:   { name: "Alaska Airlines",   color: "#014F8A", priority: false },
+      qatar:    { name: "Qatar Airways",      color: "#5C0632", priority: false },
+    };
 
-    // Render main results
-    mainResults.forEach((r, i) => renderCard(r, i, pax, list, false));
+    let cardIdx = 0;
+    airlineOrder.forEach(airlineKey => {
+      const groupResults = results.filter(r => (r.airlineKey === airlineKey || r.airlineGroup === airlineKey));
+      if (!groupResults.length) return;
 
-    // Render alternatives section if any
-    if (altResults.length > 0) {
-      const sep = document.createElement("div");
-      sep.style.cssText = "display:flex;align-items:center;gap:12px;margin:22px 0 16px;";
-      sep.innerHTML = `
-        <div style="flex:1;height:1px;background:var(--border)"></div>
-        <div style="font-size:9px;color:var(--muted2);letter-spacing:.18em;font-weight:600;white-space:nowrap;">DATES ALTERNATIVES</div>
-        <div style="flex:1;height:1px;background:var(--border)"></div>`;
-      list.appendChild(sep);
-      altResults.forEach((r, i) => renderCard(r, mainResults.length + i, pax, list, true));
-    }
+      const main = groupResults.filter(r => !r.isAlternative);
+      const alts = groupResults.filter(r => r.isAlternative);
+      const info = airlineLabels[airlineKey];
+
+      // Section header
+      const header = document.createElement("div");
+      header.style.cssText = `display:flex;align-items:center;gap:10px;margin:${cardIdx===0?"4px":"22px"} 0 12px;`;
+      header.innerHTML = `
+        <div style="width:28px;height:28px;border-radius:8px;background:${info.color}15;border:1px solid ${info.color}30;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:${info.color};letter-spacing:.5px;flex-shrink:0;">${AIRLINES[airlineKey]?.code||""}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--text);">${info.name}</div>
+        ${info.priority ? `<div style="background:${info.color}12;border:1px solid ${info.color}25;border-radius:5px;padding:2px 8px;font-size:8px;color:${info.color};font-weight:700;letter-spacing:.08em;">⭐ PRIORITAIRE</div>` : ""}
+        <div style="flex:1;height:1px;background:var(--border);"></div>`;
+      list.appendChild(header);
+
+      // Main flights
+      main.forEach(r => { renderCard(r, cardIdx++, pax, list, false); });
+
+      // Alternatives for this airline
+      if (alts.length > 0) {
+        const altSep = document.createElement("div");
+        altSep.style.cssText = "display:flex;align-items:center;gap:10px;margin:10px 0 10px 0;";
+        altSep.innerHTML = `
+          <div style="flex:1;height:1px;background:var(--border);margin-left:8px;"></div>
+          <div style="font-size:8px;color:var(--muted3);letter-spacing:.15em;font-weight:500;white-space:nowrap;">DATES ALTERNATIVES</div>
+          <div style="flex:1;height:1px;background:var(--border);margin-right:8px;"></div>`;
+        list.appendChild(altSep);
+        alts.forEach(r => { renderCard(r, cardIdx++, pax, list, true); });
+      }
+    });
 
     show("results-wrap");
   }
@@ -1271,6 +1388,11 @@ Si route vraiment impossible même avec escales : available: false.`;
           <div style="background:#F0EDE8;border:1px solid #E2DDD6;border-radius:6px;padding:3px 10px;font-size:9px;color:var(--muted2);font-weight:600;letter-spacing:.1em;">
             📅 ${r.alternativeReason}
           </div>
+        </div>` : ""}
+
+      ${r.alternativeAirport ? `
+        <div style="background:#FFF8E8;border:1px solid #F0D080;border-radius:6px;padding:4px 10px;font-size:9px;color:#7A5C00;font-weight:600;letter-spacing:.08em;margin-bottom:10px;display:inline-flex;align-items:center;gap:5px;">
+          ✈️ ${r.alternativeAirportNote || "Aéroport alternatif"}
         </div>` : ""}
 
       <div class="airline-row">
@@ -1334,9 +1456,44 @@ Si route vraiment impossible même avec escales : available: false.`;
         ${r.extras.map(e => `<span style="background:#FDF8F0;border:1px solid #E8DFD0;border-radius:5px;padding:3px 9px;font-size:9px;color:#8B6F47;letter-spacing:.06em;">✦ ${e}</span>`).join("")}
       </div>` : ""}
 
+            <div style="background:var(--cream);border:1px solid var(--border2);border-radius:9px;padding:11px 13px;margin-bottom:12px;">
+        <div style="font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:8px;">Vérification disponibilité</div>
+
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <div style="flex:1;background:var(--white);border-radius:7px;padding:8px 10px;border:1px solid var(--border);">
+            <div style="font-size:8px;color:var(--muted);margin-bottom:3px;letter-spacing:.06em;">SUR ${al.name.toUpperCase()}</div>
+            ${r.seatsAvailable !== false
+              ? `<div style="font-size:10px;color:#2E7D32;font-weight:600;">✓ ${pax} siège${pax>1?'s':''} dispo</div>`
+              : `<div style="font-size:10px;color:#C62828;font-weight:600;">✗ Indisponible</div>`
+            }
+          </div>
+          <div style="flex:1;background:var(--white);border-radius:7px;padding:8px 10px;border:1px solid var(--border);">
+            <div style="font-size:8px;color:var(--muted);margin-bottom:3px;letter-spacing:.06em;">SUR SKYSCANNER</div>
+            ${r.skyscannerAvailable !== false
+              ? `<div style="font-size:10px;color:#2E7D32;font-weight:600;">✓ ${pax} siège${pax>1?'s':''} dispo</div>`
+              : `<div style="font-size:10px;color:#C62828;font-weight:600;">✗ Non disponible</div>`
+            }
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:8px;color:var(--muted);margin-bottom:2px;">Prix Skyscanner / pax</div>
+            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--text);">${r.skyscannerPrice || "N/A"}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:8px;color:var(--muted);margin-bottom:2px;">Total × ${pax}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--text);">${r.skyscannerPriceTotal || "N/A"}</div>
+          </div>
+        </div>
+
+        ${r.skyscannerNote ? `<div style="font-size:9px;color:${r.skyscannerAvailable !== false ? '#2E7D32' : '#C62828'};margin-top:5px;font-weight:500;">${r.skyscannerNote}</div>` : ""}
+      </div>
+
       <div class="cta-row">
-        <a href="${al.url}" target="_blank" class="cta-primary" style="${isAlt?"background:var(--text2);":""}">Réserver ${al.code}</a>
-        <a href="${skyscannerUrl}" target="_blank" class="cta-secondary">Skyscanner</a>
+        <a href="https://www.aa.com/booking/search" target="_blank" class="cta-primary" style="${isAlt?"background:var(--text2);":""}">
+          Réserver en Miles AA
+        </a>
       </div>
       ` : ""}
     `;
