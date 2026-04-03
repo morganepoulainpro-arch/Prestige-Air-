@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conciergerie · Vols Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F7F4EF; --white: #FFFEFB; --border: #EAE6DF; --border2: #E2DDD6;
+      --muted: #A09589; --muted2: #B5A898; --muted3: #C4BEB5; --text: #1C1917;
+      --text2: #6B5E52; --text3: #78716C; --input-bg: #FAFAF7; --btn-bg: #F0EDE8;
+      --aa: #B11116; --qr: #5C0632; --as: #014F8A;
+    }
+    body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--text); min-height:100vh; padding-bottom:60px; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+    header { background:var(--white); border-bottom:1px solid var(--border); padding:36px 24px 28px; text-align:center; }
+    .header-eyebrow { color:var(--muted2); font-size:10px; letter-spacing:.2em; text-transform:uppercase; margin-bottom:10px; font-weight:500; }
+    header h1 { font-family:'Playfair Display',serif; font-size:28px; font-weight:600; color:var(--text); line-height:1.25; }
+    header h1 em { font-style:italic; font-weight:400; color:var(--text3); }
+    .airline-badges { display:flex; justify-content:center; gap:14px; margin-top:18px; }
+    .badge { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; letter-spacing:1px; }
+    .form-wrap { max-width:520px; margin:28px auto 0; padding:0 20px; animation:fadeUp .4s ease both; }
+    .card { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:28px 24px; box-shadow:0 2px 20px rgba(0,0,0,.03); }
+    .field { margin-bottom:14px; }
+    label { display:block; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:500; margin-bottom:6px; }
+    input,select { width:100%; background:var(--input-bg); border:1px solid var(--border2); border-radius:10px; padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); outline:none; transition:border-color .18s; appearance:none; }
+    input::placeholder { color:var(--muted3); }
+    input:focus,select:focus { border-color:var(--muted2); }
+    .select-wrap { position:relative; }
+    .select-wrap::after { content:''; position:absolute; right:14px; top:50%; transform:translateY(-50%); width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:5px solid var(--muted); pointer-events:none; }
+    .arrow-divider { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .arrow-line { flex:1; height:1px; background:var(--border); }
+    .arrow-circle { width:28px; height:28px; border-radius:50%; background:var(--btn-bg); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--muted); flex-shrink:0; }
+    .stepper { display:flex; align-items:center; margin-bottom:20px; }
+    .step-btn { width:40px; height:42px; background:var(--btn-bg); border:1px solid var(--border2); font-size:20px; color:var(--text3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:300; transition:background .15s; }
+    .step-btn:first-child { border-radius:10px 0 0 10px; }
+    .step-btn:last-child { border-radius:0 10px 10px 0; }
+    .step-btn:hover { background:var(--border); }
+    .step-display { flex:1; height:42px; background:var(--input-bg); border-top:1px solid var(--border2); border-bottom:1px solid var(--border2); display:flex; align-items:center; justify-content:center; gap:6px; }
+    .step-num { font-family:'Playfair Display',serif; font-size:18px; color:var(--text); }
+    .step-label { font-size:12px; color:var(--muted); }
+    #search-btn { width:100%; background:var(--text); color:var(--cream); border:none; border-radius:12px; padding:14px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.1); transition:opacity .2s; }
+    #search-btn:hover:not(:disabled) { opacity:.88; }
+    #search-btn:disabled { background:var(--muted3); cursor:not-allowed; }
+    .error-box { background:#FFF0F0; border:1px solid #FECDCA; border-radius:8px; padding:10px 14px; color:#C0392B; font-size:12px; margin-bottom:14px; display:none; }
+    #loader { text-align:center; margin-top:28px; display:none; }
+    .dots { display:flex; justify-content:center; gap:6px; margin-bottom:10px; }
+    .dot { width:6px; height:6px; border-radius:50%; background:var(--muted2); animation:pulse 1.2s ease-in-out infinite; }
+    .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+    .loader-text { color:var(--muted); font-size:11px; letter-spacing:.1em; }
+    #summary-wrap { max-width:520px; margin:20px auto 0; padding:0 20px; display:none; animation:fadeUp .4s ease both; }
+    .summary-box { background:var(--white); border-left:3px solid var(--muted3); border-radius:0 10px 10px 0; padding:14px 18px; color:var(--text2); font-family:'Playfair Display',serif; font-size:14px; font-style:italic; line-height:1.65; }
+    #results-wrap { max-width:520px; margin:16px auto 0; padding:0 20px; display:none; }
+    .results-label { color:var(--muted2); font-size:10px; letter-spacing:.15em; text-transform:uppercase; margin-bottom:14px; font-weight:500; }
+    .result-card { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; margin-bottom:14px; box-shadow:0 2px 16px rgba(0,0,0,.03); position:relative; overflow:hidden; animation:fadeUp .4s ease both; }
+    .result-card.unavailable { border-style:dashed; opacity:.5; box-shadow:none; }
+    .card-accent { position:absolute; top:0; left:0; right:0; height:3px; border-radius:16px 16px 0 0; }
+    .airline-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .airline-info { display:flex; gap:10px; align-items:center; }
+    .airline-logo { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; letter-spacing:1px; }
+    .airline-name { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; color:var(--text); }
+    .airline-sub { font-size:10px; color:var(--muted); letter-spacing:.08em; margin-top:1px; }
+    .unavailable-badge { background:var(--btn-bg); border-radius:6px; padding:4px 10px; font-size:10px; color:var(--muted); font-weight:600; }
+    .route-bar { display:flex; align-items:center; gap:12px; background:var(--cream); border-radius:10px; padding:14px 16px; margin-bottom:14px; }
+    .airport { text-align:center; min-width:48px; }
+    .airport-code { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--text); line-height:1; }
+    .airport-time { font-size:11px; color:var(--muted); margin-top:3px; }
+    .route-mid { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .route-duration { font-size:9px; color:var(--muted3); letter-spacing:.12em; text-transform:uppercase; }
+    .route-line { width:100%; height:1px; background:#DDD8D0; position:relative; }
+    .route-dot { position:absolute; left:50%; top:-3px; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; border:1.5px solid var(--white); }
+    .route-stops { font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
+    .price-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+    .price-cell { background:var(--cream); border-radius:10px; padding:11px 14px; }
+    .price-cell-label { font-size:9px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+    .price-cell-value { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; }
+    .flight-info { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:14px; }
+    .cta-row { display:flex; gap:8px; }
+    .cta-primary,.cta-secondary { flex:1; text-align:center; border-radius:9px; padding:9px 12px; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:opacity .15s; display:block; }
+    .cta-primary { background:var(--text); color:var(--cream); }
+    .cta-secondary { background:var(--btn-bg); color:var(--text2); border:1px solid var(--border2); }
+    .cta-primary:hover,.cta-secondary:hover { opacity:.82; }
+    .footer-note { text-align:center; color:var(--muted3); font-size:11px; margin-top:8px; line-height:1.6; }
+    #key-modal { position:fixed; inset:0; background:rgba(28,25,23,.55); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:100; padding:24px; }
+    .key-card { background:var(--white); border-radius:18px; padding:32px 28px; max-width:420px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.12); animation:fadeUp .3s ease both; }
+    .key-card h2 { font-family:'Playfair Display',serif; font-size:22px; margin-bottom:8px; color:var(--text); }
+    .key-card p { font-size:13px; color:var(--text3); line-height:1.6; margin-bottom:18px; }
+    .key-card a { color:var(--aa); }
+    #api-key-input { font-family:'DM Sans',monospace; font-size:13px; letter-spacing:.04em; margin-bottom:14px; }
+    #save-key-btn { width:100%; background:var(--text); color:var(--cream); border:none; border-radius:10px; padding:13px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; cursor:pointer; }
+    #save-key-btn:hover { opacity:.88; }
+    .key-hint { font-size:11px; color:var(--muted3); margin-top:10px; text-align:center; }
+    .change-key { position:fixed; bottom:16px; right:16px; background:var(--white); border:1px solid var(--border); border-radius:8px; padding:6px 12px; font-size:10px; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:.06em; }
+    .change-key:hover { color:var(--text); }
+    #login-screen { position:fixed; inset:0; z-index:200; background:var(--cream); display:flex; align-items:center; justify-content:center; padding:24px; }
+    .login-card { background:var(--white); border:1px solid var(--border); border-radius:20px; padding:40px 32px 32px; max-width:380px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,.07); animation:fadeUp .4s ease both; text-align:center; }
+    .login-logo { display:flex; justify-content:center; gap:10px; margin-bottom:24px; }
+    .login-card h2 { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--text); margin-bottom:6px; }
+    .login-sub { font-size:12px; color:var(--muted); letter-spacing:.08em; margin-bottom:28px; }
+    #login-input { text-align:center; letter-spacing:.14em; font-size:15px; margin-bottom:14px; }
+    #login-btn { width:100%; background:var(--text); color:var(--cream); border:none; border-radius:10px; padding:13px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; cursor:pointer; transition:opacity .2s; }
+    #login-btn:hover { opacity:.86; }
+    #login-error { color:#C0392B; font-size:12px; margin-top:12px; display:none; }
+    #app-content { display:none; }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div style="width:30px;height:30px;border-radius:50%;background:#B1111612;border:1px solid #B1111628;color:#B11116;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">AA</div>
+      <div style="width:30px;height:30px;border-radius:50%;background:#5C063212;border:1px solid #5C063228;color:#5C0632;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">QR</div>
+      <div style="width:30px;height:30px;border-radius:50%;background:#014F8A12;border:1px solid #014F8A28;color:#014F8A;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">AS</div>
+    </div>
+    <h2>Conciergerie</h2>
+    <div class="login-sub">VOLS PREMIUM · ACCÈS PRIVÉ</div>
+    <label for="login-input">MOT DE PASSE</label>
+    <input type="password" id="login-input" placeholder="••••••••••••" />
+    <button id="login-btn">ACCÉDER</button>
+    <div id="login-error">Mot de passe incorrect.</div>
+  </div>
+</div>
+
+<div id="app-content">
+<div id="key-modal">
+  <div class="key-card">
+    <h2>Clé API Anthropic</h2>
+    <p>Entrez votre clé API Anthropic. Elle est stockée uniquement dans votre navigateur.<br><br>
+    Obtenez votre clé sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+    <label for="api-key-input">CLÉ API</label>
+    <input type="password" id="api-key-input" placeholder="sk-ant-…" />
+    <button id="save-key-btn">ENREGISTRER ET CONTINUER</button>
+    <p class="key-hint">Stockée localement · Jamais partagée</p>
+  </div>
+</div>
+<header>
+  <div class="header-eyebrow">Conciergerie · Vols Premium</div>
+  <h1>Recherche de vols<br><em>en classe premium</em></h1>
+  <div class="airline-badges">
+    <div class="badge" style="background:#B1111612;border:1px solid #B1111628;color:#B11116;">AA</div>
+    <div class="badge" style="background:#5C063212;border:1px solid #5C063228;color:#5C0632;">QR</div>
+    <div class="badge" style="background:#014F8A12;border:1px solid #014F8A28;color:#014F8A;">AS</div>
+  </div>
+</header>
+<div class="form-wrap">
+  <div class="card">
+    <div class="field"><label for="from">Départ</label><input type="text" id="from" placeholder="Paris, CDG…" autocomplete="off" /></div>
+    <div class="arrow-divider"><div class="arrow-line"></div><div class="arrow-circle">→</div><div class="arrow-line"></div></div>
+    <div class="field"><label for="to">Arrivée</label><input type="text" id="to" placeholder="Dubaï, DXB…" autocomplete="off" /></div>
+    <div class="field"><label for="date">Date (optionnel)</label><input type="date" id="date" /></div>
+    <div class="field"><label for="cabin">Cabine</label><div class="select-wrap"><select id="cabin"><option value="Business">Business Class</option><option value="First">First Class</option></select></div></div>
+    <div class="field">
+      <label>Passagers</label>
+      <div class="stepper">
+        <button class="step-btn" id="pax-minus">−</button>
+        <div class="step-display"><span class="step-num" id="pax-num">1</span><span class="step-label" id="pax-label">passager</span></div>
+        <button class="step-btn" id="pax-plus">+</button>
+      </div>
+    </div>
+    <div class="error-box" id="error-box"></div>
+    <button id="search-btn">Rechercher les vols</button>
+  </div>
+</div>
+<div id="loader"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="loader-text">Consultation AA · Qatar · Alaska…</div></div>
+<div id="summary-wrap"><div class="summary-box" id="summary-text"></div></div>
+<div id="results-wrap"><div class="results-label" id="results-label"></div><div id="results-list"></div><div class="footer-note">Estimations indicatives — à vérifier sur les plateformes officielles.</div></div>
+<button class="change-key" id="change-key-btn">⚙ Clé API</button>
+</div>
+
+<script>
+const PASSWORD="conciergerie2024";
+const loginScreen=document.getElementById("login-screen"),appContent=document.getElementById("app-content"),loginBtn=document.getElementById("login-btn"),loginInput=document.getElementById("login-input"),loginError=document.getElementById("login-error");
+if(sessionStorage.getItem("concierge_auth")==="ok"){loginScreen.style.display="none";appContent.style.display="block";}
+function attemptLogin(){if(loginInput.value===PASSWORD){sessionStorage.setItem("concierge_auth","ok");loginScreen.style.display="none";appContent.style.display="block";loginError.style.display="none";}else{loginError.style.display="block";loginInput.value="";loginInput.focus();loginInput.style.borderColor="#C0392B";setTimeout(()=>loginInput.style.borderColor="",1200);}}
+loginBtn.addEventListener("click",attemptLogin);
+loginInput.addEventListener("keydown",e=>{if(e.key==="Enter")attemptLogin();});
+
+const AIRLINES={american:{name:"American Airlines",code:"AA",accent:"#B11116",miles:"AAdvantage",url:"https://www.aa.com/booking/search"},qatar:{name:"Qatar Airways",code:"QR",accent:"#5C0632",miles:"Privilege Club",url:"https://www.qatarairways.com/fr-fr/flights.html"},alaska:{name:"Alaska Airlines",code:"AS",accent:"#014F8A",miles:"Mileage Plan",url:"https://www.alaskaair.com/booking/choose-flight"}};
+let passengers=1;
+let apiKey=localStorage.getItem("concierge_api_key")||"";
+const modal=document.getElementById("key-modal"),keyInput=document.getElementById("api-key-input"),saveBtn=document.getElementById("save-key-btn"),changeBtn=document.getElementById("change-key-btn");
+function showModal(){modal.style.display="flex";}function hideModal(){modal.style.display="none";}
+if(apiKey)hideModal();else showModal();
+saveBtn.addEventListener("click",()=>{const v=keyInput.value.trim();if(!v.startsWith("sk-")){keyInput.style.borderColor="#C0392B";return;}localStorage.setItem("concierge_api_key",v);apiKey=v;hideModal();});
+changeBtn.addEventListener("click",()=>{keyInput.value=apiKey;showModal();});
+document.getElementById("pax-minus").addEventListener("click",()=>{if(passengers>1){passengers--;updatePax();}});
+document.getElementById("pax-plus").addEventListener("click",()=>{if(passengers<9){passengers++;updatePax();}});
+function updatePax(){document.getElementById("pax-num").textContent=passengers;document.getElementById("pax-label").textContent=passengers===1?"passager":"passagers";}
+document.getElementById("search-btn").addEventListener("click",search);
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.activeElement!==loginInput)search();});
+async function search(){
+  const from=document.getElementById("from").value.trim(),to=document.getElementById("to").value.trim(),date=document.getElementById("date").value,cabin=document.getElementById("cabin").value,errBox=document.getElementById("error-box");
+  if(!from||!to){errBox.textContent="Veuillez indiquer la ville de départ et d'arrivée.";errBox.style.display="block";return;}
+  errBox.style.display="none";setLoading(true);hide("summary-wrap");hide("results-wrap");
+  const prompt=`Tu es un expert en vols premium et miles pour une conciergerie de luxe.\nLe client souhaite voler en ${cabin} Class de "${from}" à "${to}"${date?` le ${date}`:""}, pour ${passengers} passager${passengers>1?"s":""}.\nNos 3 compagnies partenaires : American Airlines (AAdvantage), Qatar Airways (Privilege Club), Alaska Airlines (Mileage Plan).\nGénère des estimations réalistes. Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :\n{"results":[{"airlineKey":"american","cabin":"${cabin}","departure":{"code":"CDG","city":"Paris","time":"10:30"},"arrival":{"code":"JFK","city":"New York","time":"13:45"},"duration":"8h15","stops":0,"pricePerPax":"4 200 €","totalPrice":"8 400 €","milesPerPax":57500,"totalMiles":115000,"taxesPerPax":"320 €","flightNumber":"AA 100","aircraft":"Boeing 777-300ER","available":true}],"summary":"Synthèse 1-2 phrases."}\nSi indisponible: "available":false. Adapte totaux × ${passengers}.`;
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,messages:[{role:"user",content:prompt}]})});
+    if(!res.ok){const err=await res.json();throw new Error(err.error?.message||"Erreur API");}
+    const data=await res.json(),text=data.content.map(b=>b.text||"").join(""),clean=text.replace(/```json|```/g,"").trim(),parsed=JSON.parse(clean);
+    renderSummary(parsed.summary);renderResults(parsed.results,from,to,cabin,passengers);
+  }catch(e){errBox.textContent="Erreur : "+e.message;errBox.style.display="block";}
+  finally{setLoading(false);}
+}
+function setLoading(on){document.getElementById("loader").style.display=on?"block":"none";const btn=document.getElementById("search-btn");btn.disabled=on;btn.textContent=on?"Recherche en cours…":"Rechercher les vols";}
+function hide(id){document.getElementById(id).style.display="none";}
+function show(id){document.getElementById(id).style.display="block";}
+function renderSummary(text){document.getElementById("summary-text").textContent=text;show("summary-wrap");}
+function renderResults(results,from,to,cabin,pax){
+  document.getElementById("results-label").textContent=`${from.toUpperCase()} → ${to.toUpperCase()} · ${cabin.toUpperCase()} · ${pax} PAX`;
+  const list=document.getElementById("results-list");list.innerHTML="";
+  results.forEach((r,i)=>{
+    const al=AIRLINES[r.airlineKey]||AIRLINES.american,unavailable=!r.available,sky=`https://www.skyscanner.fr/transport/flights/${(r.departure?.code||"").toLowerCase()}/${(r.arrival?.code||"").toLowerCase()}/`;
+    const card=document.createElement("div");card.className="result-card"+(unavailable?" unavailable":"");card.style.animationDelay=(i*0.1)+"s";
+    card.innerHTML=`
+      ${!unavailable?`<div class="card-accent" style="background:linear-gradient(90deg,${al.accent}55,transparent)"></div>`:""}
+      <div class="airline-row">
+        <div class="airline-info">
+          <div class="airline-logo" style="background:${al.accent}10;border:1px solid ${al.accent}22;color:${al.accent}">${al.code}</div>
+          <div><div class="airline-name">${al.name}</div><div class="airline-sub">${r.cabin} · ${al.miles}</div></div>
+        </div>
+        ${unavailable?'<div class="unavailable-badge">NON DISPONIBLE</div>':""}
+      </div>
+      ${!unavailable?`
+      <div class="route-bar">
+        <div class="airport"><div class="airport-code">${r.departure.code}</div><div class="airport-time">${r.departure.time}</div></div>
+        <div class="route-mid">
+          <div class="route-duration">${r.duration}</div>
+          <div class="route-line"><div class="route-dot" style="background:${r.stops===0?"#5CB85C":"#E8A838"}"></div></div>
+          <div class="route-stops" style="color:${r.stops===0?"#5CB85C":"#E8A838"}">${r.stops===0?"Direct":r.stops+" escale"+(r.stops>1?"s":"")}</div>
+        </div>
+        <div class="airport"><div class="airport-code">${r.arrival.code}</div><div class="airport-time">${r.arrival.time}</div></div>
+      </div>
+      <div class="price-grid">
+        <div class="price-cell"><div class="price-cell-label">Prix / pax</div><div class="price-cell-value" style="color:var(--text)">${r.pricePerPax}</div></div>
+        <div class="price-cell"><div class="price-cell-label">Total × ${pax}</div><div class="price-cell-value" style="color:var(--text)">${r.totalPrice}</div></div>
+        <div class="price-cell"><div class="price-cell-label">Miles / pax</div><div class="price-cell-value" style="color:${al.accent}">${Number(r.milesPerPax).toLocaleString("fr-FR")} mi</div></div>
+        <div class="price-cell"><div class="price-cell-label">Miles total</div><div class="price-cell-value" style="color:${al.accent}">${Number(r.totalMiles).toLocaleString("fr-FR")} mi</div></div>
+      </div>
+      <div class="flight-info"><span>${r.flightNumber} · ${r.aircraft}</span><span>Taxes : ${r.taxesPerPax} / pax</span></div>
+      <div class="cta-row"><a href="${al.url}" target="_blank" class="cta-primary">Réserver ${al.code}</a><a href="${sky}" target="_blank" class="cta-secondary">Skyscanner</a></div>
+      `:""}`;
+    list.appendChild(card);
+  });
+  show("results-wrap");
+}
+</script>
+</body>
+</html>
