@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
@@ -8,129 +9,559 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --cream: #F7F4EF; --white: #FFFEFB; --border: #EAE6DF; --border2: #E2DDD6;
-      --muted: #A09589; --muted2: #B5A898; --muted3: #C4BEB5; --text: #1C1917;
-      --text2: #6B5E52; --text3: #78716C; --input-bg: #FAFAF7; --btn-bg: #F0EDE8;
-      --aa: #B11116; --qr: #5C0632; --as: #014F8A;
-    }
-    body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--text); min-height:100vh; padding-bottom:60px; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
-    header { background:var(--white); border-bottom:1px solid var(--border); padding:36px 24px 28px; text-align:center; }
-    .header-eyebrow { color:var(--muted2); font-size:10px; letter-spacing:.2em; text-transform:uppercase; margin-bottom:10px; font-weight:500; }
-    header h1 { font-family:'Playfair Display',serif; font-size:28px; font-weight:600; color:var(--text); line-height:1.25; }
-    header h1 em { font-style:italic; font-weight:400; color:var(--text3); }
-    .airline-badges { display:flex; justify-content:center; gap:14px; margin-top:18px; }
-    .badge { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; letter-spacing:1px; }
-    .form-wrap { max-width:520px; margin:28px auto 0; padding:0 20px; animation:fadeUp .4s ease both; }
-    .card { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:28px 24px; box-shadow:0 2px 20px rgba(0,0,0,.03); }
-    .field { margin-bottom:14px; }
-    label { display:block; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:500; margin-bottom:6px; }
-    input,select { width:100%; background:var(--input-bg); border:1px solid var(--border2); border-radius:10px; padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); outline:none; transition:border-color .18s; appearance:none; }
-    input::placeholder { color:var(--muted3); }
-    input:focus,select:focus { border-color:var(--muted2); }
-    .select-wrap { position:relative; }
-    .select-wrap::after { content:''; position:absolute; right:14px; top:50%; transform:translateY(-50%); width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:5px solid var(--muted); pointer-events:none; }
-    .arrow-divider { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-    .arrow-line { flex:1; height:1px; background:var(--border); }
-    .arrow-circle { width:28px; height:28px; border-radius:50%; background:var(--btn-bg); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--muted); flex-shrink:0; }
-    .stepper { display:flex; align-items:center; margin-bottom:20px; }
-    .step-btn { width:40px; height:42px; background:var(--btn-bg); border:1px solid var(--border2); font-size:20px; color:var(--text3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:300; transition:background .15s; }
-    .step-btn:first-child { border-radius:10px 0 0 10px; }
-    .step-btn:last-child { border-radius:0 10px 10px 0; }
-    .step-btn:hover { background:var(--border); }
-    .step-display { flex:1; height:42px; background:var(--input-bg); border-top:1px solid var(--border2); border-bottom:1px solid var(--border2); display:flex; align-items:center; justify-content:center; gap:6px; }
-    .step-num { font-family:'Playfair Display',serif; font-size:18px; color:var(--text); }
-    .step-label { font-size:12px; color:var(--muted); }
-    #search-btn { width:100%; background:var(--text); color:var(--cream); border:none; border-radius:12px; padding:14px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.1); transition:opacity .2s; }
-    #search-btn:hover:not(:disabled) { opacity:.88; }
-    #search-btn:disabled { background:var(--muted3); cursor:not-allowed; }
-    .error-box { background:#FFF0F0; border:1px solid #FECDCA; border-radius:8px; padding:10px 14px; color:#C0392B; font-size:12px; margin-bottom:14px; display:none; }
-    #loader { text-align:center; margin-top:28px; display:none; }
-    .dots { display:flex; justify-content:center; gap:6px; margin-bottom:10px; }
-    .dot { width:6px; height:6px; border-radius:50%; background:var(--muted2); animation:pulse 1.2s ease-in-out infinite; }
-    .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
-    .loader-text { color:var(--muted); font-size:11px; letter-spacing:.1em; }
-    #summary-wrap { max-width:520px; margin:20px auto 0; padding:0 20px; display:none; animation:fadeUp .4s ease both; }
-    .summary-box { background:var(--white); border-left:3px solid var(--muted3); border-radius:0 10px 10px 0; padding:14px 18px; color:var(--text2); font-family:'Playfair Display',serif; font-size:14px; font-style:italic; line-height:1.65; }
-    #results-wrap { max-width:520px; margin:16px auto 0; padding:0 20px; display:none; }
-    .results-label { color:var(--muted2); font-size:10px; letter-spacing:.15em; text-transform:uppercase; margin-bottom:14px; font-weight:500; }
-    .result-card { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; margin-bottom:14px; box-shadow:0 2px 16px rgba(0,0,0,.03); position:relative; overflow:hidden; animation:fadeUp .4s ease both; }
-    .result-card.unavailable { border-style:dashed; opacity:.5; box-shadow:none; }
-    .card-accent { position:absolute; top:0; left:0; right:0; height:3px; border-radius:16px 16px 0 0; }
-    .airline-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .airline-info { display:flex; gap:10px; align-items:center; }
-    .airline-logo { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; letter-spacing:1px; }
-    .airline-name { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; color:var(--text); }
-    .airline-sub { font-size:10px; color:var(--muted); letter-spacing:.08em; margin-top:1px; }
-    .unavailable-badge { background:var(--btn-bg); border-radius:6px; padding:4px 10px; font-size:10px; color:var(--muted); font-weight:600; }
-    .route-bar { display:flex; align-items:center; gap:12px; background:var(--cream); border-radius:10px; padding:14px 16px; margin-bottom:14px; }
-    .airport { text-align:center; min-width:48px; }
-    .airport-code { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--text); line-height:1; }
-    .airport-time { font-size:11px; color:var(--muted); margin-top:3px; }
-    .route-mid { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
-    .route-duration { font-size:9px; color:var(--muted3); letter-spacing:.12em; text-transform:uppercase; }
-    .route-line { width:100%; height:1px; background:#DDD8D0; position:relative; }
-    .route-dot { position:absolute; left:50%; top:-3px; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; border:1.5px solid var(--white); }
-    .route-stops { font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
-    .price-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
-    .price-cell { background:var(--cream); border-radius:10px; padding:11px 14px; }
-    .price-cell-label { font-size:9px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
-    .price-cell-value { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; }
-    .flight-info { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:14px; }
-    .cta-row { display:flex; gap:8px; }
-    .cta-primary,.cta-secondary { flex:1; text-align:center; border-radius:9px; padding:9px 12px; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:opacity .15s; display:block; }
-    .cta-primary { background:var(--text); color:var(--cream); }
-    .cta-secondary { background:var(--btn-bg); color:var(--text2); border:1px solid var(--border2); }
-    .cta-primary:hover,.cta-secondary:hover { opacity:.82; }
-    .footer-note { text-align:center; color:var(--muted3); font-size:11px; margin-top:8px; line-height:1.6; }
-    #key-modal { position:fixed; inset:0; background:rgba(28,25,23,.55); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:100; padding:24px; }
-    .key-card { background:var(--white); border-radius:18px; padding:32px 28px; max-width:420px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.12); animation:fadeUp .3s ease both; }
-    .key-card h2 { font-family:'Playfair Display',serif; font-size:22px; margin-bottom:8px; color:var(--text); }
-    .key-card p { font-size:13px; color:var(--text3); line-height:1.6; margin-bottom:18px; }
-    .key-card a { color:var(--aa); }
-    #api-key-input { font-family:'DM Sans',monospace; font-size:13px; letter-spacing:.04em; margin-bottom:14px; }
-    #save-key-btn { width:100%; background:var(--text); color:var(--cream); border:none; border-radius:10px; padding:13px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; cursor:pointer; }
-    #save-key-btn:hover { opacity:.88; }
-    .key-hint { font-size:11px; color:var(--muted3); margin-top:10px; text-align:center; }
-    .change-key { position:fixed; bottom:16px; right:16px; background:var(--white); border:1px solid var(--border); border-radius:8px; padding:6px 12px; font-size:10px; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:.06em; }
-    .change-key:hover { color:var(--text); }
-    #login-screen { position:fixed; inset:0; z-index:200; background:var(--cream); display:flex; align-items:center; justify-content:center; padding:24px; }
-    .login-card { background:var(--white); border:1px solid var(--border); border-radius:20px; padding:40px 32px 32px; max-width:380px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,.07); animation:fadeUp .4s ease both; text-align:center; }
-    .login-logo { display:flex; justify-content:center; gap:10px; margin-bottom:24px; }
-    .login-card h2 { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--text); margin-bottom:6px; }
-    .login-sub { font-size:12px; color:var(--muted); letter-spacing:.08em; margin-bottom:28px; }
-    #login-input { text-align:center; letter-spacing:.14em; font-size:15px; margin-bottom:14px; }
-    #login-btn { width:100%; background:var(--text); color:var(--cream); border:none; border-radius:10px; padding:13px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; cursor:pointer; transition:opacity .2s; }
-    #login-btn:hover { opacity:.86; }
-    #login-error { color:#C0392B; font-size:12px; margin-top:12px; display:none; }
-    #app-content { display:none; }
+
+```
+:root {
+  --cream: #F7F4EF;
+  --white: #FFFEFB;
+  --border: #EAE6DF;
+  --border2: #E2DDD6;
+  --muted: #A09589;
+  --muted2: #B5A898;
+  --muted3: #C4BEB5;
+  --text: #1C1917;
+  --text2: #6B5E52;
+  --text3: #78716C;
+  --input-bg: #FAFAF7;
+  --btn-bg: #F0EDE8;
+  --aa: #B11116;
+  --qr: #5C0632;
+  --as: #014F8A;
+}
+
+body {
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: .3; }
+  50%       { opacity: 1; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 24px 28px;
+  text-align: center;
+}
+.header-eyebrow {
+  color: var(--muted2);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+header h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text3);
+}
+.airline-badges {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+.badge {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+}
+
+/* ── FORM ── */
+.form-wrap {
+  max-width: 520px;
+  margin: 28px auto 0;
+  padding: 0 20px;
+  animation: fadeUp .4s ease both;
+}
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 20px rgba(0,0,0,.03);
+}
+.field { margin-bottom: 14px; }
+label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+input, select {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .18s;
+  appearance: none;
+}
+input::placeholder { color: var(--muted3); }
+input:focus, select:focus { border-color: var(--muted2); }
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--muted);
+  pointer-events: none;
+}
+
+.arrow-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.arrow-line { flex: 1; height: 1px; background: var(--border); }
+.arrow-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--btn-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--muted); flex-shrink: 0;
+}
+
+/* Passengers stepper */
+.stepper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.step-btn {
+  width: 40px; height: 42px;
+  background: var(--btn-bg);
+  border: 1px solid var(--border2);
+  font-size: 20px; color: var(--text3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 300; line-height: 1;
+  transition: background .15s;
+}
+.step-btn:first-child { border-radius: 10px 0 0 10px; }
+.step-btn:last-child  { border-radius: 0 10px 10px 0; }
+.step-btn:hover { background: var(--border); }
+.step-display {
+  flex: 1; height: 42px;
+  background: var(--input-bg);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+}
+.step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--text);
+}
+.step-label { font-size: 12px; color: var(--muted); }
+
+/* Search button */
+#search-btn {
+  width: 100%;
+  background: var(--text);
+  color: var(--cream);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  transition: opacity .2s, transform .15s;
+}
+#search-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+#search-btn:disabled { background: var(--muted3); cursor: not-allowed; }
+
+/* Error */
+.error-box {
+  background: #FFF0F0;
+  border: 1px solid #FECDCA;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #C0392B;
+  font-size: 12px;
+  margin-bottom: 14px;
+  display: none;
+}
+
+/* ── LOADER ── */
+#loader {
+  text-align: center;
+  margin-top: 28px;
+  display: none;
+}
+.dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; }
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted2);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: .2s; }
+.dot:nth-child(3) { animation-delay: .4s; }
+.loader-text { color: var(--muted); font-size: 11px; letter-spacing: .1em; }
+
+/* ── SUMMARY ── */
+#summary-wrap {
+  max-width: 520px; margin: 20px auto 0; padding: 0 20px;
+  display: none; animation: fadeUp .4s ease both;
+}
+.summary-box {
+  background: var(--white);
+  border-left: 3px solid var(--muted3);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  color: var(--text2);
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-style: italic; line-height: 1.65;
+}
+
+/* ── RESULTS ── */
+#results-wrap {
+  max-width: 520px; margin: 16px auto 0; padding: 0 20px;
+  display: none;
+}
+.results-label {
+  color: var(--muted2); font-size: 10px;
+  letter-spacing: .15em; text-transform: uppercase;
+  margin-bottom: 14px; font-weight: 500;
+}
+
+/* Result card */
+.result-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 22px 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.03);
+  position: relative; overflow: hidden;
+  animation: fadeUp .4s ease both;
+}
+.result-card.unavailable {
+  border-style: dashed; opacity: .5; box-shadow: none;
+}
+.card-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+.airline-row {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 16px;
+}
+.airline-info { display: flex; gap: 10px; align-items: center; }
+.airline-logo {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+}
+.airline-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 600; color: var(--text);
+}
+.airline-sub { font-size: 10px; color: var(--muted); letter-spacing: .08em; margin-top: 1px; }
+.unavailable-badge {
+  background: var(--btn-bg); border-radius: 6px;
+  padding: 4px 10px; font-size: 10px;
+  color: var(--muted); font-weight: 600;
+}
+
+/* Route */
+.route-bar {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--cream); border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 14px;
+}
+.airport { text-align: center; min-width: 48px; }
+.airport-code {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 600; color: var(--text); line-height: 1;
+}
+.airport-time { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.route-mid { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.route-duration { font-size: 9px; color: var(--muted3); letter-spacing: .12em; text-transform: uppercase; }
+.route-line { width: 100%; height: 1px; background: #DDD8D0; position: relative; }
+.route-dot {
+  position: absolute; left: 50%; top: -3px;
+  transform: translateX(-50%);
+  width: 6px; height: 6px; border-radius: 50%;
+  border: 1.5px solid var(--white);
+}
+.route-stops { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+
+/* Price grid */
+.price-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 12px;
+}
+.price-cell {
+  background: var(--cream); border-radius: 10px; padding: 11px 14px;
+}
+.price-cell-label {
+  font-size: 9px; color: var(--muted);
+  letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px;
+}
+.price-cell-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 600;
+}
+
+/* Flight info */
+.flight-info {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--muted); margin-bottom: 14px;
+}
+
+/* CTA buttons */
+.cta-row { display: flex; gap: 8px; }
+.cta-primary, .cta-secondary {
+  flex: 1; text-align: center;
+  border-radius: 9px; padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  text-decoration: none; transition: opacity .15s;
+  display: block;
+}
+.cta-primary { background: var(--text); color: var(--cream); }
+.cta-secondary {
+  background: var(--btn-bg); color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.cta-primary:hover, .cta-secondary:hover { opacity: .82; }
+
+.footer-note {
+  text-align: center; color: var(--muted3);
+  font-size: 11px; margin-top: 8px; line-height: 1.6;
+}
+
+/* API key modal */
+#key-modal {
+  position: fixed; inset: 0;
+  background: rgba(28,25,23,.55);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; padding: 24px;
+}
+.key-card {
+  background: var(--white);
+  border-radius: 18px; padding: 32px 28px;
+  max-width: 420px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.12);
+  animation: fadeUp .3s ease both;
+}
+.key-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; margin-bottom: 8px; color: var(--text);
+}
+.key-card p { font-size: 13px; color: var(--text3); line-height: 1.6; margin-bottom: 18px; }
+.key-card a { color: var(--aa); }
+#api-key-input {
+  font-family: 'DM Sans', monospace; font-size: 13px;
+  letter-spacing: .04em; margin-bottom: 14px;
+}
+#save-key-btn {
+  width: 100%; background: var(--text); color: var(--cream);
+  border: none; border-radius: 10px; padding: 13px;
+  font-family: 'DM Sans', sans-serif; font-size: 11px;
+  font-weight: 600; letter-spacing: .12em; cursor: pointer;
+}
+#save-key-btn:hover { opacity: .88; }
+.key-hint { font-size: 11px; color: var(--muted3); margin-top: 10px; text-align: center; }
+.change-key {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 12px;
+  font-size: 10px; color: var(--muted); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; letter-spacing: .06em;
+}
+.change-key:hover { color: var(--text); }
+
+/* ── LOGIN SCREEN ── */
+#login-screen {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.login-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 32px 32px;
+  max-width: 380px; width: 100%;
+  box-shadow: 0 8px 40px rgba(0,0,0,.07);
+  animation: fadeUp .4s ease both;
+  text-align: center;
+}
+.login-logo { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.login-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 600;
+  color: var(--text); margin-bottom: 6px;
+}
+.login-sub { font-size: 12px; color: var(--muted); letter-spacing: .08em; margin-bottom: 28px; }
+#login-input {
+  text-align: center; letter-spacing: .14em;
+  font-size: 15px; margin-bottom: 14px;
+}
+#login-btn {
+  width: 100%; background: var(--text); color: var(--cream);
+  border: none; border-radius: 10px; padding: 13px;
+  font-family: 'DM Sans', sans-serif; font-size: 11px;
+  font-weight: 600; letter-spacing: .12em; cursor: pointer;
+  transition: opacity .2s;
+}
+#login-btn:hover { opacity: .86; }
+#login-error { color: #C0392B; font-size: 12px; margin-top: 12px; display: none; }
+#app-content { display: none; }
+
+/* ── AIRPORT AUTOCOMPLETE ── */
+.airport-field { position: relative; }
+.airport-dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--white); border: 1px solid var(--border2);
+  border-radius: 10px; z-index: 999;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  max-height: 220px; overflow-y: auto;
+}
+.airport-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.airport-option:last-child { border-bottom: none; }
+.airport-option:hover, .airport-option.active { background: var(--cream); }
+.airport-code-badge {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--text); min-width: 36px;
+}
+.airport-info { flex: 1; }
+.airport-name { font-size: 12px; color: var(--text); font-weight: 500; }
+.airport-city { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+/* ── QUICK LINKS PANEL ── */
+.quick-panel {
+  max-width: 520px; margin: 20px auto 0; padding: 0 20px;
+}
+.quick-panel-inner {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.03);
+}
+.quick-title {
+  font-size: 9px; color: var(--muted2);
+  letter-spacing: .18em; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.quick-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.quick-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.quick-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--cream); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 10px 12px;
+  text-decoration: none; cursor: pointer;
+  transition: all .15s; color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+.quick-btn:hover { background: var(--border); transform: translateY(-1px); }
+.quick-btn-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  flex-shrink: 0;
+}
+.quick-btn-label { font-size: 11px; font-weight: 500; line-height: 1.3; }
+.quick-btn-sub { font-size: 9px; color: var(--muted); margin-top: 1px; }
+.quick-btn-full {
+  grid-column: 1 / -1;
+}
+.open-all-btn {
+  width: 100%; margin-top: 10px;
+  background: var(--text); color: var(--cream);
+  border: none; border-radius: 10px; padding: 12px;
+  font-family: 'DM Sans', sans-serif; font-size: 11px;
+  font-weight: 600; letter-spacing: .12em; cursor: pointer;
+  transition: opacity .2s;
+}
+.open-all-btn:hover { opacity: .86; }
+.open-all-btn:disabled { background: var(--muted3); cursor: not-allowed; }
+```
+
   </style>
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
-      <div style="width:30px;height:30px;border-radius:50%;background:#B1111612;border:1px solid #B1111628;color:#B11116;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">AA</div>
-      <div style="width:30px;height:30px;border-radius:50%;background:#5C063212;border:1px solid #5C063228;color:#5C0632;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">QR</div>
-      <div style="width:30px;height:30px;border-radius:50%;background:#014F8A12;border:1px solid #014F8A28;color:#014F8A;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">AS</div>
+      <div class="badge" style="background:#B1111612;border:1px solid #B1111628;color:#B11116;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">AA</div>
+      <div class="badge" style="background:#5C063212;border:1px solid #5C063228;color:#5C0632;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">QR</div>
+      <div class="badge" style="background:#014F8A12;border:1px solid #014F8A28;color:#014F8A;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:1px;">AS</div>
     </div>
     <h2>Conciergerie</h2>
     <div class="login-sub">VOLS PREMIUM · ACCÈS PRIVÉ</div>
     <label for="login-input">MOT DE PASSE</label>
-    <input type="password" id="login-input" placeholder="••••••••••••" />
+    <input type="password" id="login-input" placeholder="••••••••••••" autocomplete="current-password" />
     <button id="login-btn">ACCÉDER</button>
     <div id="login-error">Mot de passe incorrect.</div>
   </div>
 </div>
 
+<!-- APP (masqué jusqu'à connexion) -->
+
 <div id="app-content">
+
+<!-- API Key Modal -->
+
 <div id="key-modal">
   <div class="key-card">
     <h2>Clé API Anthropic</h2>
-    <p>Entrez votre clé API Anthropic. Elle est stockée uniquement dans votre navigateur.<br><br>
+    <p>Pour utiliser cet outil, entrez votre clé API Anthropic. Elle est stockée uniquement dans votre navigateur et n'est jamais transmise ailleurs.<br><br>
     Obtenez votre clé sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
     <label for="api-key-input">CLÉ API</label>
     <input type="password" id="api-key-input" placeholder="sk-ant-…" />
@@ -138,6 +569,9 @@
     <p class="key-hint">Stockée localement · Jamais partagée</p>
   </div>
 </div>
+
+<!-- Header -->
+
 <header>
   <div class="header-eyebrow">Conciergerie · Vols Premium</div>
   <h1>Recherche de vols<br><em>en classe premium</em></h1>
@@ -147,107 +581,765 @@
     <div class="badge" style="background:#014F8A12;border:1px solid #014F8A28;color:#014F8A;">AS</div>
   </div>
 </header>
+
+<!-- Form -->
+
 <div class="form-wrap">
   <div class="card">
-    <div class="field"><label for="from">Départ</label><input type="text" id="from" placeholder="Paris, CDG…" autocomplete="off" /></div>
-    <div class="arrow-divider"><div class="arrow-line"></div><div class="arrow-circle">→</div><div class="arrow-line"></div></div>
-    <div class="field"><label for="to">Arrivée</label><input type="text" id="to" placeholder="Dubaï, DXB…" autocomplete="off" /></div>
-    <div class="field"><label for="date">Date (optionnel)</label><input type="date" id="date" /></div>
-    <div class="field"><label for="cabin">Cabine</label><div class="select-wrap"><select id="cabin"><option value="Business">Business Class</option><option value="First">First Class</option></select></div></div>
-    <div class="field">
-      <label>Passagers</label>
-      <div class="stepper">
-        <button class="step-btn" id="pax-minus">−</button>
-        <div class="step-display"><span class="step-num" id="pax-num">1</span><span class="step-label" id="pax-label">passager</span></div>
-        <button class="step-btn" id="pax-plus">+</button>
-      </div>
-    </div>
-    <div class="error-box" id="error-box"></div>
-    <button id="search-btn">Rechercher les vols</button>
+
+```
+<div class="field airport-field">
+  <label for="from">Départ</label>
+  <input type="text" id="from" placeholder="Paris, CDG…" autocomplete="off" />
+  <div class="airport-dropdown" id="from-dropdown" style="display:none;"></div>
+</div>
+
+<div class="arrow-divider">
+  <div class="arrow-line"></div>
+  <div class="arrow-circle">→</div>
+  <div class="arrow-line"></div>
+</div>
+
+<div class="field airport-field">
+  <label for="to">Arrivée</label>
+  <input type="text" id="to" placeholder="Dubaï, DXB…" autocomplete="off" />
+  <div class="airport-dropdown" id="to-dropdown" style="display:none;"></div>
+</div>
+
+<div class="field">
+  <label for="date">Date (optionnel)</label>
+  <input type="date" id="date" />
+</div>
+
+<div class="field">
+  <label for="cabin">Cabine</label>
+  <div class="select-wrap">
+    <select id="cabin">
+      <option value="Business">Business Class</option>
+      <option value="First">First Class</option>
+    </select>
   </div>
 </div>
-<div id="loader"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="loader-text">Consultation AA · Qatar · Alaska…</div></div>
-<div id="summary-wrap"><div class="summary-box" id="summary-text"></div></div>
-<div id="results-wrap"><div class="results-label" id="results-label"></div><div id="results-list"></div><div class="footer-note">Estimations indicatives — à vérifier sur les plateformes officielles.</div></div>
-<button class="change-key" id="change-key-btn">⚙ Clé API</button>
+
+<div class="field">
+  <label>Passagers</label>
+  <div class="stepper">
+    <button class="step-btn" id="pax-minus">−</button>
+    <div class="step-display">
+      <span class="step-num" id="pax-num">1</span>
+      <span class="step-label" id="pax-label">passager</span>
+    </div>
+    <button class="step-btn" id="pax-plus">+</button>
+  </div>
 </div>
 
-<script>
-const PASSWORD="conciergerie2024";
-const loginScreen=document.getElementById("login-screen"),appContent=document.getElementById("app-content"),loginBtn=document.getElementById("login-btn"),loginInput=document.getElementById("login-input"),loginError=document.getElementById("login-error");
-if(sessionStorage.getItem("concierge_auth")==="ok"){loginScreen.style.display="none";appContent.style.display="block";}
-function attemptLogin(){if(loginInput.value===PASSWORD){sessionStorage.setItem("concierge_auth","ok");loginScreen.style.display="none";appContent.style.display="block";loginError.style.display="none";}else{loginError.style.display="block";loginInput.value="";loginInput.focus();loginInput.style.borderColor="#C0392B";setTimeout(()=>loginInput.style.borderColor="",1200);}}
-loginBtn.addEventListener("click",attemptLogin);
-loginInput.addEventListener("keydown",e=>{if(e.key==="Enter")attemptLogin();});
+<div class="error-box" id="error-box"></div>
 
-const AIRLINES={american:{name:"American Airlines",code:"AA",accent:"#B11116",miles:"AAdvantage",url:"https://www.aa.com/booking/search"},qatar:{name:"Qatar Airways",code:"QR",accent:"#5C0632",miles:"Privilege Club",url:"https://www.qatarairways.com/fr-fr/flights.html"},alaska:{name:"Alaska Airlines",code:"AS",accent:"#014F8A",miles:"Mileage Plan",url:"https://www.alaskaair.com/booking/choose-flight"}};
-let passengers=1;
-let apiKey=localStorage.getItem("concierge_api_key")||"";
-const modal=document.getElementById("key-modal"),keyInput=document.getElementById("api-key-input"),saveBtn=document.getElementById("save-key-btn"),changeBtn=document.getElementById("change-key-btn");
-function showModal(){modal.style.display="flex";}function hideModal(){modal.style.display="none";}
-if(apiKey)hideModal();else showModal();
-saveBtn.addEventListener("click",()=>{const v=keyInput.value.trim();if(!v.startsWith("sk-")){keyInput.style.borderColor="#C0392B";return;}localStorage.setItem("concierge_api_key",v);apiKey=v;hideModal();});
-changeBtn.addEventListener("click",()=>{keyInput.value=apiKey;showModal();});
-document.getElementById("pax-minus").addEventListener("click",()=>{if(passengers>1){passengers--;updatePax();}});
-document.getElementById("pax-plus").addEventListener("click",()=>{if(passengers<9){passengers++;updatePax();}});
-function updatePax(){document.getElementById("pax-num").textContent=passengers;document.getElementById("pax-label").textContent=passengers===1?"passager":"passagers";}
-document.getElementById("search-btn").addEventListener("click",search);
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.activeElement!==loginInput)search();});
-async function search(){
-  const from=document.getElementById("from").value.trim(),to=document.getElementById("to").value.trim(),date=document.getElementById("date").value,cabin=document.getElementById("cabin").value,errBox=document.getElementById("error-box");
-  if(!from||!to){errBox.textContent="Veuillez indiquer la ville de départ et d'arrivée.";errBox.style.display="block";return;}
-  errBox.style.display="none";setLoading(true);hide("summary-wrap");hide("results-wrap");
-  const prompt=`Tu es un expert en vols premium et miles pour une conciergerie de luxe.\nLe client souhaite voler en ${cabin} Class de "${from}" à "${to}"${date?` le ${date}`:""}, pour ${passengers} passager${passengers>1?"s":""}.\nNos 3 compagnies partenaires : American Airlines (AAdvantage), Qatar Airways (Privilege Club), Alaska Airlines (Mileage Plan).\nGénère des estimations réalistes. Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :\n{"results":[{"airlineKey":"american","cabin":"${cabin}","departure":{"code":"CDG","city":"Paris","time":"10:30"},"arrival":{"code":"JFK","city":"New York","time":"13:45"},"duration":"8h15","stops":0,"pricePerPax":"4 200 €","totalPrice":"8 400 €","milesPerPax":57500,"totalMiles":115000,"taxesPerPax":"320 €","flightNumber":"AA 100","aircraft":"Boeing 777-300ER","available":true}],"summary":"Synthèse 1-2 phrases."}\nSi indisponible: "available":false. Adapte totaux × ${passengers}.`;
-  try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,messages:[{role:"user",content:prompt}]})});
-    if(!res.ok){const err=await res.json();throw new Error(err.error?.message||"Erreur API");}
-    const data=await res.json(),text=data.content.map(b=>b.text||"").join(""),clean=text.replace(/```json|```/g,"").trim(),parsed=JSON.parse(clean);
-    renderSummary(parsed.summary);renderResults(parsed.results,from,to,cabin,passengers);
-  }catch(e){errBox.textContent="Erreur : "+e.message;errBox.style.display="block";}
-  finally{setLoading(false);}
+<button id="search-btn">Rechercher les vols</button>
+```
+
+  </div>
+</div>
+
+<!-- Quick Links Panel -->
+
+<div class="quick-panel" id="quick-panel" style="display:none;">
+  <div class="quick-panel-inner">
+    <div class="quick-title">Ouvrir les recherches</div>
+    <div class="quick-grid">
+      <a id="ql-aa" class="quick-btn" target="_blank" href="#">
+        <div class="quick-btn-icon" style="background:#B1111612;color:#B11116;border:1px solid #B1111628;">AA</div>
+        <div><div class="quick-btn-label">American Airlines</div><div class="quick-btn-sub">Miles AAdvantage</div></div>
+      </a>
+      <a id="ql-qr" class="quick-btn" target="_blank" href="#">
+        <div class="quick-btn-icon" style="background:#5C063212;color:#5C0632;border:1px solid #5C063228;">QR</div>
+        <div><div class="quick-btn-label">Qatar Airways</div><div class="quick-btn-sub">Privilege Club</div></div>
+      </a>
+      <a id="ql-as" class="quick-btn" target="_blank" href="#">
+        <div class="quick-btn-icon" style="background:#014F8A12;color:#014F8A;border:1px solid #014F8A28;">AS</div>
+        <div><div class="quick-btn-label">Alaska Airlines</div><div class="quick-btn-sub">Mileage Plan</div></div>
+      </a>
+      <a id="ql-gf" class="quick-btn" target="_blank" href="#">
+        <div class="quick-btn-icon" style="background:#34A85312;color:#34A853;border:1px solid #34A85328;">GF</div>
+        <div><div class="quick-btn-label">Google Flights</div><div class="quick-btn-sub">Prix cash</div></div>
+      </a>
+      <a id="ql-seats" class="quick-btn quick-btn-full" target="_blank" href="#">
+        <div class="quick-btn-icon" style="background:#6B5E5212;color:#6B5E52;border:1px solid #6B5E5228;">SA</div>
+        <div><div class="quick-btn-label">seats.aero</div><div class="quick-btn-sub">Disponibilités miles temps réel · toutes compagnies</div></div>
+      </a>
+      <a id="ql-sky" class="quick-btn quick-btn-full" target="_blank" href="#">
+        <div class="quick-btn-icon" style="background:#0770E312;color:#0770E3;border:1px solid #0770E328;">SK</div>
+        <div><div class="quick-btn-label">Skyscanner</div><div class="quick-btn-sub">Comparateur · meilleures dates</div></div>
+      </a>
+    </div>
+    <button class="open-all-btn" id="open-all-btn">⚡ TOUT OUVRIR EN MÊME TEMPS</button>
+  </div>
+</div>
+
+<!-- Loader -->
+
+<div id="loader">
+  <div class="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  <div class="loader-text">Consultation AA · Qatar · Alaska…</div>
+</div>
+
+<!-- Summary -->
+
+<div id="summary-wrap">
+  <div class="summary-box" id="summary-text"></div>
+</div>
+
+<!-- Results -->
+
+<div id="results-wrap">
+  <div class="results-label" id="results-label"></div>
+  <div id="results-list"></div>
+  <div class="footer-note">Estimations indicatives — à vérifier sur les plateformes officielles.</div>
+</div>
+
+<button class="change-key" id="change-key-btn">⚙ Changer la clé API</button>
+
+</div><!-- end #app-content -->
+
+<script>
+  // ── AIRPORT DATABASE ──
+  const AIRPORTS = [
+    // Europe
+    {code:"CDG",name:"Charles de Gaulle",city:"Paris",country:"France"},
+    {code:"ORY",name:"Orly",city:"Paris",country:"France"},
+    {code:"LHR",name:"Heathrow",city:"Londres",country:"Royaume-Uni"},
+    {code:"LGW",name:"Gatwick",city:"Londres",country:"Royaume-Uni"},
+    {code:"STN",name:"Stansted",city:"Londres",country:"Royaume-Uni"},
+    {code:"AMS",name:"Schiphol",city:"Amsterdam",country:"Pays-Bas"},
+    {code:"FRA",name:"Frankfurt",city:"Francfort",country:"Allemagne"},
+    {code:"MUC",name:"Munich",city:"Munich",country:"Allemagne"},
+    {code:"MAD",name:"Barajas",city:"Madrid",country:"Espagne"},
+    {code:"BCN",name:"El Prat",city:"Barcelone",country:"Espagne"},
+    {code:"FCO",name:"Fiumicino",city:"Rome",country:"Italie"},
+    {code:"MXP",name:"Malpensa",city:"Milan",country:"Italie"},
+    {code:"ZRH",name:"Zurich",city:"Zurich",country:"Suisse"},
+    {code:"GVA",name:"Genève",city:"Genève",country:"Suisse"},
+    {code:"BRU",name:"Bruxelles",city:"Bruxelles",country:"Belgique"},
+    {code:"VIE",name:"Vienne",city:"Vienne",country:"Autriche"},
+    {code:"CPH",name:"Kastrup",city:"Copenhague",country:"Danemark"},
+    {code:"ARN",name:"Arlanda",city:"Stockholm",country:"Suède"},
+    {code:"OSL",name:"Gardermoen",city:"Oslo",country:"Norvège"},
+    {code:"HEL",name:"Vantaa",city:"Helsinki",country:"Finlande"},
+    {code:"LIS",name:"Humberto Delgado",city:"Lisbonne",country:"Portugal"},
+    {code:"ATH",name:"Eleftherios Venizelos",city:"Athènes",country:"Grèce"},
+    {code:"IST",name:"Istanbul",city:"Istanbul",country:"Turquie"},
+    {code:"SAW",name:"Sabiha Gökçen",city:"Istanbul",country:"Turquie"},
+    {code:"WAW",name:"Chopin",city:"Varsovie",country:"Pologne"},
+    {code:"PRG",name:"Václav Havel",city:"Prague",country:"Tchéquie"},
+    {code:"BUD",name:"Budapest",city:"Budapest",country:"Hongrie"},
+    {code:"DUB",name:"Dublin",city:"Dublin",country:"Irlande"},
+    {code:"EDI",name:"Edinburgh",city:"Édimbourg",country:"Royaume-Uni"},
+    {code:"MAN",name:"Manchester",city:"Manchester",country:"Royaume-Uni"},
+    {code:"NCE",name:"Nice Côte d'Azur",city:"Nice",country:"France"},
+    {code:"LYS",name:"Saint-Exupéry",city:"Lyon",country:"France"},
+    {code:"MRS",name:"Provence",city:"Marseille",country:"France"},
+    {code:"TLS",name:"Blagnac",city:"Toulouse",country:"France"},
+    {code:"BOD",name:"Mérignac",city:"Bordeaux",country:"France"},
+    {code:"NTE",name:"Atlantique",city:"Nantes",country:"France"},
+    {code:"SXB",name:"Entzheim",city:"Strasbourg",country:"France"},
+    // Moyen-Orient
+    {code:"DXB",name:"International",city:"Dubaï",country:"Émirats Arabes Unis"},
+    {code:"AUH",name:"Zayed",city:"Abu Dhabi",country:"Émirats Arabes Unis"},
+    {code:"DOH",name:"Hamad",city:"Doha",country:"Qatar"},
+    {code:"RUH",name:"King Khalid",city:"Riyad",country:"Arabie Saoudite"},
+    {code:"JED",name:"King Abdulaziz",city:"Djeddah",country:"Arabie Saoudite"},
+    {code:"KWI",name:"International",city:"Koweït",country:"Koweït"},
+    {code:"BAH",name:"International",city:"Bahreïn",country:"Bahreïn"},
+    {code:"MCT",name:"Muscat",city:"Mascate",country:"Oman"},
+    {code:"AMM",name:"Queen Alia",city:"Amman",country:"Jordanie"},
+    {code:"BEY",name:"Rafic Hariri",city:"Beyrouth",country:"Liban"},
+    {code:"TLV",name:"Ben Gurion",city:"Tel Aviv",country:"Israël"},
+    // Afrique
+    {code:"CAI",name:"International",city:"Le Caire",country:"Égypte"},
+    {code:"CMN",name:"Mohammed V",city:"Casablanca",country:"Maroc"},
+    {code:"RAK",name:"Menara",city:"Marrakech",country:"Maroc"},
+    {code:"TUN",name:"Carthage",city:"Tunis",country:"Tunisie"},
+    {code:"ALG",name:"Houari Boumediene",city:"Alger",country:"Algérie"},
+    {code:"JNB",name:"O.R. Tambo",city:"Johannesburg",country:"Afrique du Sud"},
+    {code:"CPT",name:"International",city:"Le Cap",country:"Afrique du Sud"},
+    {code:"NBO",name:"Jomo Kenyatta",city:"Nairobi",country:"Kenya"},
+    {code:"ADD",name:"Bole",city:"Addis-Abeba",country:"Éthiopie"},
+    {code:"LOS",name:"Murtala Muhammed",city:"Lagos",country:"Nigeria"},
+    {code:"ABV",name:"Nnamdi Azikiwe",city:"Abuja",country:"Nigeria"},
+    {code:"ACC",name:"Kotoka",city:"Accra",country:"Ghana"},
+    {code:"DAR",name:"Julius Nyerere",city:"Dar es Salaam",country:"Tanzanie"},
+    {code:"ZNZ",name:"Abeid Amani Karume",city:"Zanzibar",country:"Tanzanie"},
+    {code:"MBA",name:"Moi",city:"Mombasa",country:"Kenya"},
+    {code:"MRU",name:"Sir Seewoosagur",city:"Maurice",country:"Maurice"},
+    {code:"RUN",name:"Roland Garros",city:"La Réunion",country:"France"},
+    {code:"SEZ",name:"International",city:"Seychelles",country:"Seychelles"},
+    {code:"TNR",name:"Ivato",city:"Antananarivo",country:"Madagascar"},
+    {code:"MPM",name:"Maputo",city:"Maputo",country:"Mozambique"},
+    {code:"LUN",name:"Kenneth Kaunda",city:"Lusaka",country:"Zambie"},
+    {code:"HRE",name:"Robert Mugabe",city:"Harare",country:"Zimbabwe"},
+    // Asie
+    {code:"DXB",name:"International",city:"Dubaï",country:"Émirats"},
+    {code:"BKK",name:"Suvarnabhumi",city:"Bangkok",country:"Thaïlande"},
+    {code:"DMK",name:"Don Mueang",city:"Bangkok",country:"Thaïlande"},
+    {code:"SIN",name:"Changi",city:"Singapour",country:"Singapour"},
+    {code:"KUL",name:"KLIA",city:"Kuala Lumpur",country:"Malaisie"},
+    {code:"HKG",name:"Chek Lap Kok",city:"Hong Kong",country:"Hong Kong"},
+    {code:"NRT",name:"Narita",city:"Tokyo",country:"Japon"},
+    {code:"HND",name:"Haneda",city:"Tokyo",country:"Japon"},
+    {code:"KIX",name:"Kansai",city:"Osaka",country:"Japon"},
+    {code:"ICN",name:"Incheon",city:"Séoul",country:"Corée du Sud"},
+    {code:"PEK",name:"Capital",city:"Pékin",country:"Chine"},
+    {code:"PKX",name:"Daxing",city:"Pékin",country:"Chine"},
+    {code:"PVG",name:"Pudong",city:"Shanghai",country:"Chine"},
+    {code:"SHA",name:"Hongqiao",city:"Shanghai",country:"Chine"},
+    {code:"CAN",name:"Baiyun",city:"Guangzhou",country:"Chine"},
+    {code:"DEL",name:"Indira Gandhi",city:"New Delhi",country:"Inde"},
+    {code:"BOM",name:"Chhatrapati Shivaji",city:"Mumbai",country:"Inde"},
+    {code:"BLR",name:"Kempegowda",city:"Bangalore",country:"Inde"},
+    {code:"MAA",name:"Chennai",city:"Chennai",country:"Inde"},
+    {code:"CCU",name:"Netaji Subhas",city:"Calcutta",country:"Inde"},
+    {code:"CMB",name:"Bandaranaike",city:"Colombo",country:"Sri Lanka"},
+    {code:"MLE",name:"Velana",city:"Malé",country:"Maldives"},
+    {code:"CGK",name:"Soekarno-Hatta",city:"Jakarta",country:"Indonésie"},
+    {code:"DPS",name:"Ngurah Rai",city:"Bali",country:"Indonésie"},
+    {code:"MNL",name:"Ninoy Aquino",city:"Manille",country:"Philippines"},
+    {code:"SGN",name:"Tan Son Nhat",city:"Ho Chi Minh",country:"Vietnam"},
+    {code:"HAN",name:"Noi Bai",city:"Hanoï",country:"Vietnam"},
+    {code:"RGN",name:"Yangon",city:"Rangoun",country:"Myanmar"},
+    {code:"KTM",name:"Tribhuvan",city:"Katmandou",country:"Népal"},
+    {code:"DAC",name:"Hazrat Shahjalal",city:"Dhaka",country:"Bangladesh"},
+    {code:"KHI",name:"Jinnah",city:"Karachi",country:"Pakistan"},
+    {code:"LHE",name:"Allama Iqbal",city:"Lahore",country:"Pakistan"},
+    {code:"ISB",name:"New Islamabad",city:"Islamabad",country:"Pakistan"},
+    {code:"TAS",name:"Islam Karimov",city:"Tachkent",country:"Ouzbékistan"},
+    {code:"ALA",name:"Almaty",city:"Almaty",country:"Kazakhstan"},
+    // Amériques
+    {code:"JFK",name:"John F. Kennedy",city:"New York",country:"États-Unis"},
+    {code:"LGA",name:"LaGuardia",city:"New York",country:"États-Unis"},
+    {code:"EWR",name:"Newark",city:"New York",country:"États-Unis"},
+    {code:"LAX",name:"Los Angeles",city:"Los Angeles",country:"États-Unis"},
+    {code:"ORD",name:"O'Hare",city:"Chicago",country:"États-Unis"},
+    {code:"MDW",name:"Midway",city:"Chicago",country:"États-Unis"},
+    {code:"ATL",name:"Hartsfield-Jackson",city:"Atlanta",country:"États-Unis"},
+    {code:"DFW",name:"Dallas/Fort Worth",city:"Dallas",country:"États-Unis"},
+    {code:"MIA",name:"Miami",city:"Miami",country:"États-Unis"},
+    {code:"SFO",name:"San Francisco",city:"San Francisco",country:"États-Unis"},
+    {code:"SEA",name:"Sea-Tac",city:"Seattle",country:"États-Unis"},
+    {code:"BOS",name:"Logan",city:"Boston",country:"États-Unis"},
+    {code:"IAD",name:"Dulles",city:"Washington",country:"États-Unis"},
+    {code:"DCA",name:"Reagan",city:"Washington",country:"États-Unis"},
+    {code:"IAH",name:"George Bush",city:"Houston",country:"États-Unis"},
+    {code:"PHX",name:"Sky Harbor",city:"Phoenix",country:"États-Unis"},
+    {code:"LAS",name:"Harry Reid",city:"Las Vegas",country:"États-Unis"},
+    {code:"DEN",name:"Denver",city:"Denver",country:"États-Unis"},
+    {code:"MSP",name:"Minneapolis",city:"Minneapolis",country:"États-Unis"},
+    {code:"DTW",name:"Detroit",city:"Detroit",country:"États-Unis"},
+    {code:"PHL",name:"Philadelphia",city:"Philadelphie",country:"États-Unis"},
+    {code:"CLT",name:"Douglas",city:"Charlotte",country:"États-Unis"},
+    {code:"MCO",name:"Orlando",city:"Orlando",country:"États-Unis"},
+    {code:"TPA",name:"Tampa",city:"Tampa",country:"États-Unis"},
+    {code:"SAN",name:"San Diego",city:"San Diego",country:"États-Unis"},
+    {code:"PDX",name:"Portland",city:"Portland",country:"États-Unis"},
+    {code:"ANC",name:"Ted Stevens",city:"Anchorage",country:"États-Unis"},
+    {code:"HNL",name:"Daniel K. Inouye",city:"Honolulu",country:"États-Unis"},
+    {code:"YYZ",name:"Pearson",city:"Toronto",country:"Canada"},
+    {code:"YVR",name:"Vancouver",city:"Vancouver",country:"Canada"},
+    {code:"YUL",name:"Trudeau",city:"Montréal",country:"Canada"},
+    {code:"YYC",name:"Calgary",city:"Calgary",country:"Canada"},
+    {code:"MEX",name:"Benito Juárez",city:"Mexico",country:"Mexique"},
+    {code:"CUN",name:"Cancún",city:"Cancún",country:"Mexique"},
+    {code:"GDL",name:"Miguel Hidalgo",city:"Guadalajara",country:"Mexique"},
+    {code:"BOG",name:"El Dorado",city:"Bogotá",country:"Colombie"},
+    {code:"MDE",name:"José María Córdova",city:"Medellín",country:"Colombie"},
+    {code:"GRU",name:"Guarulhos",city:"São Paulo",country:"Brésil"},
+    {code:"GIG",name:"Galeão",city:"Rio de Janeiro",country:"Brésil"},
+    {code:"BSB",name:"Juscelino Kubitschek",city:"Brasilia",country:"Brésil"},
+    {code:"EZE",name:"Ministro Pistarini",city:"Buenos Aires",country:"Argentine"},
+    {code:"SCL",name:"Arturo Merino Benítez",city:"Santiago",country:"Chili"},
+    {code:"LIM",name:"Jorge Chávez",city:"Lima",country:"Pérou"},
+    {code:"UIO",name:"Mariscal Sucre",city:"Quito",country:"Équateur"},
+    {code:"GYE",name:"José Joaquín de Olmedo",city:"Guayaquil",country:"Équateur"},
+    {code:"PTY",name:"Tocumen",city:"Panama",country:"Panama"},
+    {code:"MBJ",name:"Sangster",city:"Montego Bay",country:"Jamaïque"},
+    {code:"NAS",name:"Lynden Pindling",city:"Nassau",country:"Bahamas"},
+    {code:"PUJ",name:"Punta Cana",city:"Punta Cana",country:"Rép. Dominicaine"},
+    {code:"SDQ",name:"Las Américas",city:"Saint-Domingue",country:"Rép. Dominicaine"},
+    {code:"SJU",name:"Luis Muñoz Marín",city:"San Juan",country:"Porto Rico"},
+    {code:"HAV",name:"José Martí",city:"La Havane",country:"Cuba"},
+    // Océanie
+    {code:"SYD",name:"Kingsford Smith",city:"Sydney",country:"Australie"},
+    {code:"MEL",name:"Tullamarine",city:"Melbourne",country:"Australie"},
+    {code:"BNE",name:"Brisbane",city:"Brisbane",country:"Australie"},
+    {code:"PER",name:"Perth",city:"Perth",country:"Australie"},
+    {code:"ADL",name:"Adelaide",city:"Adélaïde",country:"Australie"},
+    {code:"AKL",name:"Auckland",city:"Auckland",country:"Nouvelle-Zélande"},
+    {code:"CHC",name:"Christchurch",city:"Christchurch",country:"Nouvelle-Zélande"},
+    {code:"NAN",name:"Nausori",city:"Nadi",country:"Fidji"},
+    {code:"PPT",name:"Faa'a",city:"Papeete",country:"Polynésie française"},
+    {code:"GUM",name:"A.B. Won Pat",city:"Guam",country:"Guam"},
+  ];
+
+  function searchAirports(query) {
+    if (!query || query.length < 2) return [];
+    const q = query.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+    return AIRPORTS.filter(a => {
+      const code = a.code.toLowerCase();
+      const name = a.name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+      const city = a.city.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+      const country = a.country.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+      return code.includes(q) || city.startsWith(q) || name.includes(q) || country.startsWith(q);
+    }).slice(0, 7);
+  }
+
+  function setupAutocomplete(inputId, dropdownId) {
+    const input = document.getElementById(inputId);
+    const dropdown = document.getElementById(dropdownId);
+    let activeIdx = -1;
+    let selected = false;
+
+    input.addEventListener("input", () => {
+      selected = false;
+      const results = searchAirports(input.value);
+      if (results.length === 0) { dropdown.style.display = "none"; return; }
+      activeIdx = -1;
+      dropdown.innerHTML = results.map((a, i) => `
+        <div class="airport-option" data-idx="${i}" data-code="${a.code}" data-label="${a.city} (${a.code})">
+          <div class="airport-code-badge">${a.code}</div>
+          <div class="airport-info">
+            <div class="airport-name">${a.name}</div>
+            <div class="airport-city">${a.city} · ${a.country}</div>
+          </div>
+        </div>`).join("");
+      dropdown.style.display = "block";
+
+      dropdown.querySelectorAll(".airport-option").forEach(opt => {
+        opt.addEventListener("mousedown", e => {
+          e.preventDefault();
+          input.value = opt.dataset.label;
+          input.dataset.code = opt.dataset.code;
+          dropdown.style.display = "none";
+          selected = true;
+        });
+      });
+    });
+
+    input.addEventListener("keydown", e => {
+      const opts = dropdown.querySelectorAll(".airport-option");
+      if (!opts.length) return;
+      if (e.key === "ArrowDown") { e.preventDefault(); activeIdx = Math.min(activeIdx+1, opts.length-1); opts.forEach((o,i)=>o.classList.toggle("active",i===activeIdx)); }
+      if (e.key === "ArrowUp")   { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); opts.forEach((o,i)=>o.classList.toggle("active",i===activeIdx)); }
+      if (e.key === "Enter" && activeIdx >= 0) {
+        const opt = opts[activeIdx];
+        input.value = opt.dataset.label;
+        input.dataset.code = opt.dataset.code;
+        dropdown.style.display = "none";
+      }
+      if (e.key === "Escape") dropdown.style.display = "none";
+    });
+
+    input.addEventListener("blur", () => setTimeout(() => { dropdown.style.display = "none"; }, 150));
+  }
+
+  setupAutocomplete("from", "from-dropdown");
+  setupAutocomplete("to", "to-dropdown");
+
+  // Helper to extract IATA code from input value
+  function getCode(inputId) {
+    const input = document.getElementById(inputId);
+    if (input.dataset.code) return input.dataset.code;
+    const match = input.value.match(/\(([A-Z]{3})\)/);
+    if (match) return match[1];
+    return input.value.substring(0,3).toUpperCase();
+  }
+
+  // ── LOGIN ──
+  const PASSWORD = "conciergerie2024";
+  const loginScreen = document.getElementById("login-screen");
+  const appContent  = document.getElementById("app-content");
+  const loginBtn    = document.getElementById("login-btn");
+  const loginInput  = document.getElementById("login-input");
+  const loginError  = document.getElementById("login-error");
+
+  function checkLogin() {
+    if (sessionStorage.getItem("concierge_auth") === "ok") {
+      loginScreen.style.display = "none";
+      appContent.style.display  = "block";
+    }
+  }
+  checkLogin();
+
+  function attemptLogin() {
+    if (loginInput.value === PASSWORD) {
+      sessionStorage.setItem("concierge_auth", "ok");
+      loginScreen.style.display = "none";
+      appContent.style.display  = "block";
+      loginError.style.display  = "none";
+    } else {
+      loginError.style.display = "block";
+      loginInput.value = "";
+      loginInput.focus();
+      loginInput.style.borderColor = "#C0392B";
+      setTimeout(() => loginInput.style.borderColor = "", 1200);
+    }
+  }
+  loginBtn.addEventListener("click", attemptLogin);
+  loginInput.addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
+
+  // ── QUICK LINKS ──
+  function updateQuickLinks() {
+    const from = document.getElementById("from").value.trim();
+    const to   = document.getElementById("to").value.trim();
+    const date = document.getElementById("date").value;
+    const cabin = document.getElementById("cabin").value;
+    const pax  = passengers;
+
+    if (!from || !to) return;
+
+    const dateStr = date ? date.replace(/-/g, "") : "";
+    const cabinCode = cabin === "First" ? "F" : "C";
+
+    const fromCode = getCode("from");
+    const toCode   = getCode("to");
+
+    // // American Airlines
+    document.getElementById("ql-aa").href =
+      `https://www.aa.com/booking/search?locale=fr_FR&pax=${pax}&adult=${pax}&type=OneWay&searchType=Award&cabin=${cabinCode}&carriers=ALL&slices=[{"orig":"${fromCode}","dest":"${toCode}","date":"${date||""}"}]`;
+
+    // Qatar Airways
+    document.getElementById("ql-qr").href =
+      `https://www.qatarairways.com/fr-fr/flights.html#/search?tripType=O&selLang=fr&fromStation=${fromCode}&toStation=${toCode}&departDate=${date||""}&adults=${pax}&children=0&infants=0&teenager=0&cabinClass=${cabin === "First" ? "F" : "C"}&bookingClass=Rewards`;
+
+    // Alaska Airlines
+    document.getElementById("ql-as").href =
+      `https://www.alaskaair.com/booking/choose-flight?A=${pax}&C=0&L=0&D=0&O=${fromCode}&D1=${toCode}&DT1=${date||""}&ST=oneway&SC=${cabin === "First" ? "first" : "business"}&CD=`;
+
+    // Google Flights
+    const gDate = date || "";
+    document.getElementById("ql-gf").href =
+      `https://www.google.com/travel/flights/search?tfs=CBwQAhopagcIARIDJRIEEB8aBnsidHlwZSI6ImFpcnBvcnQiLCJjb2RlIjoiJHtmcm9tQ29kZX0ifRoHCAESAxIEEB8aBnsidHlwZSI6ImFpcnBvcnQiLCJjb2RlIjoiJHt0b0NvZGV9In1yBggBEgIQAXABmAEB&hl=fr#flt=${fromCode}.${toCode}.${gDate};c:${cabin === "First" ? "f" : "b"};e:1;sd:1;t:f`;
+
+    // seats.aero
+    document.getElementById("ql-seats").href =
+      `https://seats.aero/search?origin=${fromCode}&destination=${toCode}&cabin=${cabin === "First" ? "first" : "business"}${date ? `&date=${date}` : ""}`;
+
+    // Skyscanner
+    document.getElementById("ql-sky").href =
+      `https://www.skyscanner.fr/transport/flights/${fromCode.toLowerCase()}/${toCode.toLowerCase()}/${dateStr}/`;
+
+    // Open all button
+    document.getElementById("open-all-btn").onclick = () => {
+      const links = ["ql-aa","ql-qr","ql-as","ql-gf","ql-seats","ql-sky"];
+      links.forEach((id, i) => {
+        setTimeout(() => {
+          window.open(document.getElementById(id).href, "_blank");
+        }, i * 300);
+      });
+    };
+
+    document.getElementById("quick-panel").style.display = "block";
+  }
+
+  const AIRLINES = {
+    american: { name: "American Airlines", code: "AA", accent: "#B11116", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    qatar:    { name: "Qatar Airways",     code: "QR", accent: "#5C0632", miles: "Privilege Club", url: "https://www.qatarairways.com/fr-fr/flights.html" },
+    alaska:   { name: "Alaska Airlines",  code: "AS", accent: "#014F8A", miles: "Mileage Plan",   url: "https://www.alaskaair.com/booking/choose-flight" },
+  };
+
+  let passengers = 1;
+  let apiKey = localStorage.getItem("concierge_api_key") || "";
+
+  // ── API Key modal ──
+  const modal    = document.getElementById("key-modal");
+  const keyInput = document.getElementById("api-key-input");
+  const saveBtn  = document.getElementById("save-key-btn");
+  const changeBtn= document.getElementById("change-key-btn");
+
+  function showModal() { modal.style.display = "flex"; }
+  function hideModal() { modal.style.display = "none"; }
+
+  if (apiKey) hideModal(); else showModal();
+
+  saveBtn.addEventListener("click", () => {
+    const v = keyInput.value.trim();
+    if (!v.startsWith("sk-")) { keyInput.style.borderColor = "#C0392B"; return; }
+    localStorage.setItem("concierge_api_key", v);
+    apiKey = v;
+    hideModal();
+  });
+  changeBtn.addEventListener("click", () => { keyInput.value = apiKey; showModal(); });
+
+  // ── Passengers stepper ──
+  document.getElementById("pax-minus").addEventListener("click", () => {
+    if (passengers > 1) { passengers--; updatePax(); }
+  });
+  document.getElementById("pax-plus").addEventListener("click", () => {
+    if (passengers < 9) { passengers++; updatePax(); }
+  });
+  function updatePax() {
+    document.getElementById("pax-num").textContent = passengers;
+    document.getElementById("pax-label").textContent = passengers === 1 ? "passager" : "passagers";
+  }
+
+  // ── Search ──
+  document.getElementById("search-btn").addEventListener("click", search);
+  document.addEventListener("keydown", e => { if (e.key === "Enter") search(); });
+
+  async function search() {
+    const from   = document.getElementById("from").value.trim();
+    const to     = document.getElementById("to").value.trim();
+    const date   = document.getElementById("date").value;
+    const cabin  = document.getElementById("cabin").value;
+    const errBox = document.getElementById("error-box");
+
+    if (!from || !to) {
+      errBox.textContent = "Veuillez indiquer la ville de départ et d'arrivée.";
+      errBox.style.display = "block"; return;
+    }
+    errBox.style.display = "none";
+
+    updateQuickLinks();
+    setLoading(true);
+    hide("summary-wrap");
+    hide("results-wrap");
+
+    const prompt = `Tu es un expert en vols premium et miles pour une conciergerie de luxe.
+Le client souhaite voler en ${cabin} Class de "${from}" à "${to}"${date ? ` le ${date}` : ""}, pour ${passengers} passager${passengers > 1 ? "s" : ""}.
+
+Nos 3 compagnies partenaires : American Airlines (AAdvantage), Qatar Airways (Privilege Club), Alaska Airlines (Mileage Plan).
+
+INSTRUCTIONS :
+- Pour chaque compagnie, génère le vol principal demandé (isAlternative: false).
+- Si une compagnie ne dessert pas directement la route, propose le meilleur itinéraire avec escale(s) plutôt que "non disponible".
+- Si une date est précisée, génère AUSSI 2 à 3 alternatives de dates proches (J-2, J-1, J+1, J+2) sur la ou les compagnies les plus pertinentes (isAlternative: true).
+- PRIORITÉ MAXIMALE AU PRIX ÉLEVÉ : toujours proposer les tarifs les plus chers disponibles (suites, First Class haut de gamme, suppléments bagages, services premium). L'objectif est de maximiser le bénéfice de la conciergerie.
+- Trie : vols exacts d'abord, alternatives ensuite du PLUS CHER au moins cher.
+- Pour les miles : indique toujours le nombre de miles correspondant à la classe la plus premium disponible.
+- Mentionne les suppléments possibles : bagages supplémentaires, accès salon, service à bord premium, sièges suite privée si disponibles.
+
+Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :
+{
+  "results": [
+    {
+      "airlineKey": "american",
+      "cabin": "${cabin}",
+      "isAlternative": false,
+      "alternativeDate": null,
+      "alternativeReason": null,
+      "departure": { "code": "CDG", "city": "Paris", "time": "10:30" },
+      "arrival": { "code": "JFK", "city": "New York", "time": "13:45" },
+      "duration": "8h15",
+      "stops": 0,
+      "pricePerPax": "4 200 €",
+      "totalPrice": "8 400 €",
+      "milesPerPax": 57500,
+      "totalMiles": 115000,
+      "taxesPerPax": "320 €",
+      "flightNumber": "AA 100",
+      "aircraft": "Boeing 777-300ER",
+      "available": true,
+      "extras": ["Suite privée disponible", "Accès salon Flagship", "Bagages inclus 2×32kg"]
+    },
+    {
+      "airlineKey": "american",
+      "cabin": "${cabin}",
+      "isAlternative": true,
+      "alternativeDate": "2025-04-06",
+      "alternativeReason": "J+1 · Meilleur tarif",
+      "departure": { "code": "CDG", "city": "Paris", "time": "11:00" },
+      "arrival": { "code": "JFK", "city": "New York", "time": "14:15" },
+      "duration": "8h15",
+      "stops": 0,
+      "pricePerPax": "3 850 €",
+      "totalPrice": "7 700 €",
+      "milesPerPax": 52000,
+      "totalMiles": 104000,
+      "taxesPerPax": "310 €",
+      "flightNumber": "AA 102",
+      "aircraft": "Boeing 777-300ER",
+      "available": true
+    }
+  ],
+  "summary": "Synthèse 2-3 phrases pour le concierge : mentionne le tarif le plus élevé disponible, les options premium supplémentaires (suite, service à bord, salon), et les alternatives les plus chères."
 }
-function setLoading(on){document.getElementById("loader").style.display=on?"block":"none";const btn=document.getElementById("search-btn");btn.disabled=on;btn.textContent=on?"Recherche en cours…":"Rechercher les vols";}
-function hide(id){document.getElementById(id).style.display="none";}
-function show(id){document.getElementById(id).style.display="block";}
-function renderSummary(text){document.getElementById("summary-text").textContent=text;show("summary-wrap");}
-function renderResults(results,from,to,cabin,pax){
-  document.getElementById("results-label").textContent=`${from.toUpperCase()} → ${to.toUpperCase()} · ${cabin.toUpperCase()} · ${pax} PAX`;
-  const list=document.getElementById("results-list");list.innerHTML="";
-  results.forEach((r,i)=>{
-    const al=AIRLINES[r.airlineKey]||AIRLINES.american,unavailable=!r.available,sky=`https://www.skyscanner.fr/transport/flights/${(r.departure?.code||"").toLowerCase()}/${(r.arrival?.code||"").toLowerCase()}/`;
-    const card=document.createElement("div");card.className="result-card"+(unavailable?" unavailable":"");card.style.animationDelay=(i*0.1)+"s";
-    card.innerHTML=`
-      ${!unavailable?`<div class="card-accent" style="background:linear-gradient(90deg,${al.accent}55,transparent)"></div>`:""}
+Adapte totalPrice et totalMiles × ${passengers}.
+RAPPEL : toujours maximiser les prix — propose les tarifs les plus élevés du marché pour chaque compagnie.
+Si route vraiment impossible même avec escales : available: false.`;
+
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1500,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error?.message || "Erreur API");
+      }
+
+      const data = await res.json();
+      const text = data.content.map(b => b.text || "").join("");
+      const clean = text.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+
+      renderSummary(parsed.summary);
+      renderResults(parsed.results, from, to, cabin, passengers);
+    } catch (e) {
+      errBox.textContent = "Erreur : " + e.message + ". Vérifiez votre clé API.";
+      errBox.style.display = "block";
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function setLoading(on) {
+    document.getElementById("loader").style.display = on ? "block" : "none";
+    const btn = document.getElementById("search-btn");
+    btn.disabled = on;
+    btn.textContent = on ? "Recherche en cours…" : "Rechercher les vols";
+  }
+
+  function hide(id) { document.getElementById(id).style.display = "none"; }
+  function show(id, display="block") { document.getElementById(id).style.display = display; }
+
+  function renderSummary(text) {
+    document.getElementById("summary-text").textContent = text;
+    show("summary-wrap");
+  }
+
+  function renderResults(results, from, to, cabin, pax) {
+    document.getElementById("results-label").textContent =
+      `${from.toUpperCase()} → ${to.toUpperCase()} · ${cabin.toUpperCase()} · ${pax} PAX`;
+
+    const list = document.getElementById("results-list");
+    list.innerHTML = "";
+
+    // Split main results vs alternatives
+    const mainResults = results.filter(r => !r.isAlternative);
+    const altResults  = results.filter(r => r.isAlternative);
+
+    // Render main results
+    mainResults.forEach((r, i) => renderCard(r, i, pax, list, false));
+
+    // Render alternatives section if any
+    if (altResults.length > 0) {
+      const sep = document.createElement("div");
+      sep.style.cssText = "display:flex;align-items:center;gap:12px;margin:22px 0 16px;";
+      sep.innerHTML = `
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <div style="font-size:9px;color:var(--muted2);letter-spacing:.18em;font-weight:600;white-space:nowrap;">DATES ALTERNATIVES</div>
+        <div style="flex:1;height:1px;background:var(--border)"></div>`;
+      list.appendChild(sep);
+      altResults.forEach((r, i) => renderCard(r, mainResults.length + i, pax, list, true));
+    }
+
+    show("results-wrap");
+  }
+
+  function renderCard(r, i, pax, list, isAlt) {
+    const al = AIRLINES[r.airlineKey] || AIRLINES.american;
+    const unavailable = !r.available;
+    const skyscannerUrl = `https://www.skyscanner.fr/transport/flights/${(r.departure?.code||"").toLowerCase()}/${(r.arrival?.code||"").toLowerCase()}/`;
+
+    const card = document.createElement("div");
+    card.className = "result-card" + (unavailable ? " unavailable" : "") + (isAlt ? " alt-card" : "");
+    card.style.animationDelay = (i * 0.08) + "s";
+    if (isAlt) card.style.cssText += "border-style:dashed;border-color:#D4CEC7;background:#FDFCFA;";
+
+    card.innerHTML = `
+      ${!unavailable ? `<div class="card-accent" style="background:linear-gradient(90deg,${al.accent}${isAlt ? "33" : "55"},transparent)"></div>` : ""}
+
+      ${isAlt && r.alternativeReason ? `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="background:#F0EDE8;border:1px solid #E2DDD6;border-radius:6px;padding:3px 10px;font-size:9px;color:var(--muted2);font-weight:600;letter-spacing:.1em;">
+            📅 ${r.alternativeReason}
+          </div>
+        </div>` : ""}
+
       <div class="airline-row">
         <div class="airline-info">
-          <div class="airline-logo" style="background:${al.accent}10;border:1px solid ${al.accent}22;color:${al.accent}">${al.code}</div>
-          <div><div class="airline-name">${al.name}</div><div class="airline-sub">${r.cabin} · ${al.miles}</div></div>
+          <div class="airline-logo" style="background:${al.accent}${isAlt?"08":"10"};border:1px solid ${al.accent}22;color:${al.accent}">${al.code}</div>
+          <div>
+            <div class="airline-name" style="font-size:${isAlt?"14px":"16px"}">${al.name}</div>
+            <div class="airline-sub">${r.cabin} · ${al.miles}</div>
+          </div>
         </div>
-        ${unavailable?'<div class="unavailable-badge">NON DISPONIBLE</div>':""}
+        ${unavailable ? `<div class="unavailable-badge">NON DISPONIBLE</div>` : ""}
       </div>
-      ${!unavailable?`
-      <div class="route-bar">
-        <div class="airport"><div class="airport-code">${r.departure.code}</div><div class="airport-time">${r.departure.time}</div></div>
+
+      ${!unavailable ? `
+      <div class="route-bar" style="${isAlt ? "background:#F2F0EC;" : ""}">
+        <div class="airport">
+          <div class="airport-code" style="font-size:${isAlt?"18px":"22px"}">${r.departure.code}</div>
+          <div class="airport-time">${r.departure.time}</div>
+        </div>
         <div class="route-mid">
           <div class="route-duration">${r.duration}</div>
-          <div class="route-line"><div class="route-dot" style="background:${r.stops===0?"#5CB85C":"#E8A838"}"></div></div>
-          <div class="route-stops" style="color:${r.stops===0?"#5CB85C":"#E8A838"}">${r.stops===0?"Direct":r.stops+" escale"+(r.stops>1?"s":"")}</div>
+          <div class="route-line">
+            <div class="route-dot" style="background:${r.stops===0?"#5CB85C":"#E8A838"}"></div>
+          </div>
+          <div class="route-stops" style="color:${r.stops===0?"#5CB85C":"#E8A838"}">
+            ${r.stops === 0 ? "Direct" : r.stops + " escale" + (r.stops > 1 ? "s" : "")}
+          </div>
         </div>
-        <div class="airport"><div class="airport-code">${r.arrival.code}</div><div class="airport-time">${r.arrival.time}</div></div>
+        <div class="airport">
+          <div class="airport-code" style="font-size:${isAlt?"18px":"22px"}">${r.arrival.code}</div>
+          <div class="airport-time">${r.arrival.time}</div>
+        </div>
       </div>
+
       <div class="price-grid">
-        <div class="price-cell"><div class="price-cell-label">Prix / pax</div><div class="price-cell-value" style="color:var(--text)">${r.pricePerPax}</div></div>
-        <div class="price-cell"><div class="price-cell-label">Total × ${pax}</div><div class="price-cell-value" style="color:var(--text)">${r.totalPrice}</div></div>
-        <div class="price-cell"><div class="price-cell-label">Miles / pax</div><div class="price-cell-value" style="color:${al.accent}">${Number(r.milesPerPax).toLocaleString("fr-FR")} mi</div></div>
-        <div class="price-cell"><div class="price-cell-label">Miles total</div><div class="price-cell-value" style="color:${al.accent}">${Number(r.totalMiles).toLocaleString("fr-FR")} mi</div></div>
+        <div class="price-cell">
+          <div class="price-cell-label">Prix / pax</div>
+          <div class="price-cell-value" style="color:var(--text);font-size:${isAlt?"15px":"17px"}">${r.pricePerPax}</div>
+        </div>
+        <div class="price-cell">
+          <div class="price-cell-label">Total × ${pax}</div>
+          <div class="price-cell-value" style="color:var(--text);font-size:${isAlt?"15px":"17px"}">${r.totalPrice}</div>
+        </div>
+        <div class="price-cell">
+          <div class="price-cell-label">Miles / pax</div>
+          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${Number(r.milesPerPax).toLocaleString("fr-FR")} mi</div>
+        </div>
+        <div class="price-cell">
+          <div class="price-cell-label">Miles total</div>
+          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${Number(r.totalMiles).toLocaleString("fr-FR")} mi</div>
+        </div>
       </div>
-      <div class="flight-info"><span>${r.flightNumber} · ${r.aircraft}</span><span>Taxes : ${r.taxesPerPax} / pax</span></div>
-      <div class="cta-row"><a href="${al.url}" target="_blank" class="cta-primary">Réserver ${al.code}</a><a href="${sky}" target="_blank" class="cta-secondary">Skyscanner</a></div>
-      `:""}`;
+
+      <div class="flight-info">
+        <span>${r.flightNumber} · ${r.aircraft}</span>
+        <span>Taxes : ${r.taxesPerPax} / pax</span>
+      </div>
+
+      ${r.extras && r.extras.length ? `
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;">
+        ${r.extras.map(e => `<span style="background:#FDF8F0;border:1px solid #E8DFD0;border-radius:5px;padding:3px 9px;font-size:9px;color:#8B6F47;letter-spacing:.06em;">✦ ${e}</span>`).join("")}
+      </div>` : ""}
+
+      <div class="cta-row">
+        <a href="${al.url}" target="_blank" class="cta-primary" style="${isAlt?"background:var(--text2);":""}">Réserver ${al.code}</a>
+        <a href="${skyscannerUrl}" target="_blank" class="cta-secondary">Skyscanner</a>
+      </div>
+      ` : ""}
+    `;
+
     list.appendChild(card);
-  });
-  show("results-wrap");
-}
+  }
 </script>
+
 </body>
 </html>
