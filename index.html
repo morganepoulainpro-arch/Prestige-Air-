@@ -1116,7 +1116,7 @@ INSTRUCTIONS :
 - Si une compagnie ne dessert pas directement la route, propose le meilleur itinéraire avec escale(s) plutôt que "non disponible".
 - Si une date est précisée, génère AUSSI 2 à 3 alternatives de dates proches (J-2, J-1, J+1, J+2) sur la ou les compagnies les plus pertinentes (isAlternative: true).
 - PRIORITÉ MAXIMALE AU PRIX ÉLEVÉ : toujours proposer les tarifs les plus chers disponibles (suites, First Class haut de gamme, suppléments bagages, services premium). L'objectif est de maximiser le bénéfice de la conciergerie.
-- Trie : vols exacts d'abord, alternatives ensuite du PLUS CHER au moins cher.
+- Trie : American Airlines TOUJOURS en premier, puis les autres compagnies du PLUS CHER au moins cher. Pour les alternatives aussi, American Airlines d'abord.
 - Pour les miles : indique toujours le nombre de miles correspondant à la classe la plus premium disponible.
 - Mentionne les suppléments possibles : bagages supplémentaires, accès salon, service à bord premium, sièges suite privée si disponibles.
 
@@ -1227,9 +1227,13 @@ Si route vraiment impossible même avec escales : available: false.`;
     const list = document.getElementById("results-list");
     list.innerHTML = "";
 
-    // Split main results vs alternatives
-    const mainResults = results.filter(r => !r.isAlternative);
-    const altResults  = results.filter(r => r.isAlternative);
+    // Split main results vs alternatives — AA toujours en premier
+    const mainResults = results
+      .filter(r => !r.isAlternative)
+      .sort((a,b) => a.airlineKey === 'american' ? -1 : b.airlineKey === 'american' ? 1 : 0);
+    const altResults = results
+      .filter(r => r.isAlternative)
+      .sort((a,b) => a.airlineKey === 'american' ? -1 : b.airlineKey === 'american' ? 1 : 0);
 
     // Render main results
     mainResults.forEach((r, i) => renderCard(r, i, pax, list, false));
