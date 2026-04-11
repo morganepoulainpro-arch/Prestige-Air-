@@ -1457,11 +1457,11 @@ Si route vraiment impossible même avec escales : available: false.`;
         </div>
         <div class="price-cell">
           <div class="price-cell-label">Miles / pax</div>
-          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${Number(r.milesPerPax).toLocaleString("fr-FR")} mi</div>
+          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${r.milesPerPax >= 1000 ? (r.milesPerPax/1000).toFixed(0) + "K" : r.milesPerPax} mi</div>
         </div>
         <div class="price-cell">
           <div class="price-cell-label">Miles total</div>
-          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${Number(r.totalMiles).toLocaleString("fr-FR")} mi</div>
+          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${r.totalMiles >= 1000 ? (r.totalMiles/1000).toFixed(0) + "K" : r.totalMiles} mi</div>
         </div>
       </div>
 
