@@ -1028,9 +1028,21 @@
   }
 
   const AIRLINES = {
-    american: { name: "American Airlines", code: "AA", accent: "#B11116", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
-    qatar:    { name: "Qatar Airways",     code: "QR", accent: "#5C0632", miles: "Privilege Club", url: "https://www.qatarairways.com/fr-fr/flights.html" },
-    alaska:   { name: "Alaska Airlines",  code: "AS", accent: "#014F8A", miles: "Mileage Plan",   url: "https://www.alaskaair.com/booking/choose-flight" },
+    american:  { name: "American Airlines",  code: "AA", accent: "#B11116", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    british:   { name: "British Airways",     code: "BA", accent: "#075AAA", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    iberia:    { name: "Iberia",              code: "IB", accent: "#C60B1E", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    jal:       { name: "Japan Airlines",      code: "JL", accent: "#D01C1C", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    cathay:    { name: "Cathay Pacific",      code: "CX", accent: "#006564", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    qatar:     { name: "Qatar Airways",       code: "QR", accent: "#5C0632", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    etihad:    { name: "Etihad Airways",      code: "EY", accent: "#B49A5E", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    ram:       { name: "Royal Air Maroc",     code: "AT", accent: "#C1272D", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    rj:        { name: "Royal Jordanian",     code: "RJ", accent: "#006B3F", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    qantas:    { name: "Qantas",              code: "QF", accent: "#E10D0D", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    finnair:   { name: "Finnair",             code: "AY", accent: "#003580", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    malaysia:  { name: "Malaysia Airlines",   code: "MH", accent: "#E62B2B", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    alaska:    { name: "Alaska Airlines",     code: "AS", accent: "#014F8A", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    tahiti:    { name: "Air Tahiti Nui",      code: "TN", accent: "#006B9F", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
+    srilankan: { name: "SriLankan Airlines",  code: "UL", accent: "#8B0000", miles: "AAdvantage",    url: "https://www.aa.com/booking/search" },
   };
 
   let passengers = 1;
@@ -1093,13 +1105,18 @@
     const prompt = `Tu es un expert en vols premium et miles pour une conciergerie de luxe.
 Le client souhaite voler en ${cabin} Class de "${from}" à "${to}"${date ? ` le ${date}` : ""}, pour ${passengers} passager${passengers > 1 ? "s" : ""}.
 
-Nos 3 compagnies partenaires : American Airlines (AAdvantage), Qatar Airways (Privilege Club), Alaska Airlines (Mileage Plan).
+Toutes les réservations se font via American Airlines (miles AAdvantage).
+
+TOUS LES PARTENAIRES AMERICAN AIRLINES ACCEPTÉS :
+Oneworld : British Airways, Iberia, Japan Airlines, Cathay Pacific, Qatar Airways, Royal Air Maroc, Royal Jordanian, Finnair, Malaysia Airlines, Qantas, Alaska Airlines, Sri Lankan Airlines
+Partenaires directs : Etihad Airways, Air Tahiti Nui
 
 RÈGLES STRICTES DE LA CONCIERGERIE :
 
 1. RÉSERVATION : Toutes les réservations via American Airlines (miles AAdvantage).
-   Compagnies opérantes ACCEPTÉES uniquement : American Airlines, Etihad, Japan Airlines, British Airways, Royal Jordanian, Royal Air Maroc, Qatar Airways (rarement).
-   REFUSÉ : low-cost ou compagnie non-premium. Si un segment non listé ci-dessus = EXCLURE ce vol.
+   Cherche TOUTES les options disponibles parmi les partenaires AA listés ci-dessus.
+   REFUSÉ : low-cost, compagnie non-premium, ou compagnie non partenaire AA.
+   Si un segment est opéré par une compagnie non listée = EXCLURE ce vol.
 
 2. CLASSES : TOUS les segments doivent être Business ou First. Vol mixte (ex: First + Éco) = REFUSÉ.
 
@@ -1179,7 +1196,9 @@ RÈGLES STRICTES DE LA CONCIERGERIE :
 7. PRIX : Tarifs les plus élevés en priorité (suites, First premium, suppléments). Trier du PLUS CHER au moins cher.
 
 8. Ajouter sur chaque résultat :
-   - "airlineGroup": "american"/"alaska"/"qatar"
+   - "airlineGroup": clé de la compagnie opérante parmi : "american", "british", "iberia", "jal", "cathay", "etihad", "qatar", "ram", "rj", "qantas", "finnair", "malaysia", "alaska", "tahiti", "srilankan"
+   - "operatingAirline": nom exact de la compagnie opérante
+   - "operatingAirlineCode": code IATA (AA, BA, IB, JL, CX, EY, QR, AT, RJ, QF, AY, MH, AS, TN, UL)
    VÉRIFICATION OBLIGATOIRE SUR LES 3 COMPAGNIES (AA, Alaska, Qatar) :
    Pour chaque vol de chaque compagnie, vérifier et renseigner :
    - "skyscannerPrice": "X XXX €" (prix cash estimé PAR PAX sur Skyscanner)
@@ -1206,6 +1225,8 @@ Réponds UNIQUEMENT en JSON strict sans markdown ni backticks :
   "results": [
     {
       "airlineKey": "american",
+      "operatingAirline": "British Airways",
+      "operatingAirlineCode": "BA",
       "cabin": "${cabin}",
       "isAlternative": false,
       "alternativeDate": null,
@@ -1343,12 +1364,24 @@ Si route vraiment impossible même avec escales : available: false.`;
     const list = document.getElementById("results-list");
     list.innerHTML = "";
 
-    // Group by airline in order: AA, Alaska, Qatar
-    const airlineOrder = ["american", "alaska", "qatar"];
+    // Group by airline in order: AA first (all partners), then Alaska, Qatar
+    const airlineOrder = ["american","british","iberia","jal","cathay","etihad","qatar","ram","rj","qantas","finnair","malaysia","alaska","tahiti","srilankan"];
     const airlineLabels = {
-      american: { name: "American Airlines", color: "#B11116", priority: true },
-      alaska:   { name: "Alaska Airlines",   color: "#014F8A", priority: false },
-      qatar:    { name: "Qatar Airways",      color: "#5C0632", priority: false },
+      american:  { name: "American Airlines",  color: "#B11116", priority: true  },
+      british:   { name: "British Airways",    color: "#075AAA", priority: false },
+      iberia:    { name: "Iberia",             color: "#C60B1E", priority: false },
+      jal:       { name: "Japan Airlines",     color: "#D01C1C", priority: false },
+      cathay:    { name: "Cathay Pacific",     color: "#006564", priority: false },
+      etihad:    { name: "Etihad Airways",     color: "#B49A5E", priority: false },
+      qatar:     { name: "Qatar Airways",      color: "#5C0632", priority: false },
+      ram:       { name: "Royal Air Maroc",    color: "#C1272D", priority: false },
+      rj:        { name: "Royal Jordanian",    color: "#006B3F", priority: false },
+      qantas:    { name: "Qantas",             color: "#E10D0D", priority: false },
+      finnair:   { name: "Finnair",            color: "#003580", priority: false },
+      malaysia:  { name: "Malaysia Airlines",  color: "#E62B2B", priority: false },
+      alaska:    { name: "Alaska Airlines",    color: "#014F8A", priority: false },
+      tahiti:    { name: "Air Tahiti Nui",     color: "#006B9F", priority: false },
+      srilankan: { name: "SriLankan Airlines", color: "#8B0000", priority: false },
     };
 
     let cardIdx = 0;
@@ -1390,7 +1423,7 @@ Si route vraiment impossible même avec escales : available: false.`;
   }
 
   function renderCard(r, i, pax, list, isAlt) {
-    const al = AIRLINES[r.airlineKey] || AIRLINES.american;
+    const al = AIRLINES[r.airlineGroup] || AIRLINES[r.airlineKey] || AIRLINES.american;
     const unavailable = !r.available;
     const skyscannerUrl = `https://www.skyscanner.fr/transport/flights/${(r.departure?.code||"").toLowerCase()}/${(r.arrival?.code||"").toLowerCase()}/`;
 
@@ -1418,8 +1451,8 @@ Si route vraiment impossible même avec escales : available: false.`;
         <div class="airline-info">
           <div class="airline-logo" style="background:${al.accent}${isAlt?"08":"10"};border:1px solid ${al.accent}22;color:${al.accent}">${al.code}</div>
           <div>
-            <div class="airline-name" style="font-size:${isAlt?"14px":"16px"}">${al.name}</div>
-            <div class="airline-sub">${r.cabin} · ${al.miles}</div>
+            <div class="airline-name" style="font-size:${isAlt?"14px":"16px"}">AA Miles · ${r.operatingAirline || al.name}</div>
+            <div class="airline-sub">${r.cabin} · ${r.operatingAirlineCode ? `Opéré par ${r.operatingAirline} (${r.operatingAirlineCode})` : al.miles}</div>
           </div>
         </div>
         ${unavailable ? `<div class="unavailable-badge">NON DISPONIBLE</div>` : ""}
