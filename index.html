@@ -1114,7 +1114,9 @@ Partenaires directs : Etihad Airways, Air Tahiti Nui
 RÈGLES STRICTES DE LA CONCIERGERIE :
 
 1. RÉSERVATION : Toutes les réservations via American Airlines (miles AAdvantage).
-   Cherche TOUTES les options disponibles parmi les partenaires AA listés ci-dessus.
+   Tu DOIS chercher et proposer des options sur TOUTES les compagnies partenaires AA listées ci-dessus.
+   Pour chaque route, génère UN vol principal pour CHAQUE compagnie partenaire qui dessert cette route — même avec escales.
+   Ne te limite JAMAIS à une seule compagnie. Si Etihad, British Airways, Japan Airlines et Iberia desservent tous CDG→HKT, propose les 4.
    REFUSÉ : low-cost, compagnie non-premium, ou compagnie non partenaire AA.
    Si un segment est opéré par une compagnie non listée = EXCLURE ce vol.
 
@@ -1190,7 +1192,13 @@ RÈGLES STRICTES DE LA CONCIERGERIE :
    Indiquer dans "alternativeAirportNote" la suggestion ex: "Arrivée BKK · liaison locale vers Ko Samui (45 min)".
    Toujours proposer MINIMUM 2 à 3 options.
 
-6. ORDRE : Grouper par compagnie : 1) American Airlines 2) Alaska Airlines 3) Qatar Airways.
+6. ORDRE : Génère un vol pour CHAQUE compagnie partenaire qui dessert la route. Grouper dans cet ordre :
+   1) American Airlines (american) 2) British Airways (british) 3) Japan Airlines (jal)
+   4) Etihad (etihad) 5) Iberia (iberia) 6) Cathay Pacific (cathay) 7) Qatar Airways (qatar)
+   8) Royal Air Maroc (ram) 9) Royal Jordanian (rj) 10) Qantas (qantas) 11) Finnair (finnair)
+   12) Malaysia Airlines (malaysia) 13) Alaska Airlines (alaska) 14) Air Tahiti Nui (tahiti) 15) SriLankan (srilankan)
+   Si une compagnie ne dessert pas la route même avec escales → ne pas l'inclure.
+   Pour chaque compagnie présente : 1 vol principal (isAlternative: false) + 1-2 alternatives dates (isAlternative: true).
    Pour chaque compagnie : vol principal (isAlternative: false) + 2-3 alternatives de dates (isAlternative: true).
 
 7. PRIX : Tarifs les plus élevés en priorité (suites, First premium, suppléments). Trier du PLUS CHER au moins cher.
