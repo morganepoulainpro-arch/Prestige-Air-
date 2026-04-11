@@ -1460,8 +1460,8 @@ Si route vraiment impossible même avec escales : available: false.`;
           <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${r.milesPerPax >= 1000 ? (r.milesPerPax/1000).toFixed(0) + "K" : r.milesPerPax} mi</div>
         </div>
         <div class="price-cell">
-          <div class="price-cell-label">Miles total</div>
-          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"}">${r.totalMiles >= 1000 ? (r.totalMiles/1000).toFixed(0) + "K" : r.totalMiles} mi</div>
+          <div class="price-cell-label">Miles × ${pax} pax</div>
+          <div class="price-cell-value" style="color:${al.accent};font-size:${isAlt?"15px":"17px"};font-weight:700;">${(() => { const t = r.milesPerPax * pax; return t >= 1000 ? (t/1000).toFixed(0) + "K" : t; })()} mi</div>
         </div>
       </div>
 
@@ -1518,11 +1518,30 @@ Si route vraiment impossible même avec escales : available: false.`;
       </div>
 
       <div class="cta-row">
-        <a href="https://www.aa.com/booking/search" target="_blank" class="cta-primary" style="${isAlt?"background:var(--text2);":""}">
-          Réserver en Miles AA
+        <a href="${(() => {
+          const orig = r.departure?.code || '';
+          const dest = r.arrival?.code || '';
+          const dt = r.departure?.date || (date || '');
+          const cabinCode = cabin === 'First' ? 'FIRST' : 'BUSINESS';
+          const slices = encodeURIComponent(JSON.stringify([{orig, dest, date: dt}]));
+          return `https://www.aa.com/booking/search?locale=fr_FR&pax=${pax}&adult=${pax}&type=OneWay&searchType=Award&cabin=${cabinCode}&carriers=ALL&slices=${slices}`;
+        })()}" target="_blank" class="cta-primary" style="${isAlt?"background:var(--text2);":""}">
+          Vérifier sur AA.com →
         </a>
-        <a href="https://seats.aero/search?origin=${r.departure?.code||''}&destination=${r.arrival?.code||''}&cabin=${cabin==='First'?'first':'business'}&program=aadvantage" target="_blank" class="cta-secondary" style="font-size:9px;padding:0 10px;">
-          seats.aero →
+        <a href="${(() => {
+          const orig = r.departure?.code || '';
+          const dest = r.arrival?.code || '';
+          const dt = r.departure?.date || (date || '');
+          const cabinCode = cabin === 'First' ? 'FIRST' : 'BUSINESS';
+          const slices = encodeURIComponent(JSON.stringify([{orig, dest, date: dt}]));
+          return `https://www.aa.com/booking/search?locale=fr_FR&pax=${pax}&adult=${pax}&type=OneWay&searchType=Award&cabin=${cabinCode}&carriers=ALL&slices=${slices}`;
+        })()}" target="_blank" class="cta-secondary" style="font-size:9px;padding:0 10px;white-space:nowrap;">
+          Réserver en Miles
+        </a>
+      </div>
+      <div style="margin-top:6px;">
+        <a href="https://seats.aero/search?origin=${r.departure?.code||''}&destination=${r.arrival?.code||''}&cabin=${cabin==='First'?'first':'business'}&program=aadvantage" target="_blank" class="cta-secondary" style="font-size:9px;padding:0 10px;width:100%;text-align:center;display:block;">
+          Vérifier dispo miles sur seats.aero →
         </a>
       </div>
       ` : ""}
